@@ -140,10 +140,12 @@
 \headcommand {\beamer@framepages {223}{223}}
 \headcommand {\slideentry {0}{0}{71}{224/224}{}{0}}
 \headcommand {\beamer@framepages {224}{224}}
-\headcommand {\slideentry {0}{0}{72}{225/230}{}{0}}
-\headcommand {\beamer@framepages {225}{230}}
-\headcommand {\beamer@partpages {1}{230}}
-\headcommand {\beamer@subsectionpages {1}{230}}
-\headcommand {\beamer@sectionpages {1}{230}}
-\headcommand {\beamer@documentpages {230}}
-\headcommand {\gdef \inserttotalframenumber {71}}
+\headcommand {\slideentry {0}{0}{72}{225/225}{}{0}}
+\headcommand {\beamer@framepages {225}{225}}
+\headcommand {\slideentry {0}{0}{73}{226/231}{}{0}}
+\headcommand {\beamer@framepages {226}{231}}
+\headcommand {\beamer@partpages {1}{231}}
+\headcommand {\beamer@subsectionpages {1}{231}}
+\headcommand {\beamer@sectionpages {1}{231}}
+\headcommand {\beamer@documentpages {231}}
+\headcommand {\gdef \inserttotalframenumber {72}}

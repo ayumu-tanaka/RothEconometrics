@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2021.7.13)  7 SEP 2025 20:25
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2021.7.13)  15 SEP 2025 08:23
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1838,22 +1838,30 @@ OMS/ztmcm/m/n/10.95 ^^@ \T1/lmss/m/n/10.95 1\OML/ztmcm/m/it/10.95 :\T1/lmss/m/n
 ] [69
 
 ]
-<p-values0.jpg, id=432, 623.32875pt x 481.8pt>
-File: p-values0.jpg Graphic file (type jpg)
-<use p-values0.jpg>
-Package pdftex.def Info: p-values0.jpg  used on input line 1702.
-(pdftex.def)             Requested size: 280.49535pt x 216.80798pt.
+<xkcd_sun.png, id=432, 469.755pt x 711.65875pt>
+File: xkcd_sun.png Graphic file (type png)
+<use xkcd_sun.png>
+Package pdftex.def Info: xkcd_sun.png  used on input line 1698.
+(pdftex.def)             Requested size: 172.24266pt x 260.94235pt.
  [70
 
- <./p-values0.jpg>]
-<p-values.jpg, id=438, 623.32875pt x 481.8pt>
-File: p-values.jpg Graphic file (type jpg)
-<use p-values.jpg>
-Package pdftex.def Info: p-values.jpg  used on input line 1711.
+ <./xkcd_sun.png>]
+<p-values0.jpg, id=438, 623.32875pt x 481.8pt>
+File: p-values0.jpg Graphic file (type jpg)
+<use p-values0.jpg>
+Package pdftex.def Info: p-values0.jpg  used on input line 1706.
 (pdftex.def)             Requested size: 280.49535pt x 216.80798pt.
  [71
 
- <./p-values.jpg>] [72
+ <./p-values0.jpg>]
+<p-values.jpg, id=444, 623.32875pt x 481.8pt>
+File: p-values.jpg Graphic file (type jpg)
+<use p-values.jpg>
+Package pdftex.def Info: p-values.jpg  used on input line 1715.
+(pdftex.def)             Requested size: 280.49535pt x 216.80798pt.
+ [72
+
+ <./p-values.jpg>] [73
 
 ]
 \tf@nav=\write6
@@ -1865,16 +1873,15 @@ Package pdftex.def Info: p-values.jpg  used on input line 1711.
 \tf@snm=\write8
 \openout8 = `Chapter2_v1_handout.snm'.
 
-
-(./Chapter2_v1_handout.aux)
+ (./Chapter2_v1_handout.aux)
 Package rerunfilecheck Info: File `Chapter2_v1_handout.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 29671 strings out of 478994
- 547658 string characters out of 5858184
+ 29680 strings out of 478994
+ 547780 string characters out of 5858184
  846321 words of memory out of 5000000
- 46263 multiletter control sequences out of 15000+600000
+ 46270 multiletter control sequences out of 15000+600000
  538026 words of font info for 171 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  135i,15n,135p,446b,597s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -1899,10 +1906,10 @@ ive/2021/texmf-dist/fonts/type1/public/cm-super/sftt1095.pfb></usr/local/texliv
 e/2021/texmf-dist/fonts/type1/urw/symbol/usyr.pfb></usr/local/texlive/2021/texm
 f-dist/fonts/type1/urw/symbol/usyr.pfb></usr/local/texlive/2021/texmf-dist/font
 s/type1/urw/times/utmr8a.pfb>
-Output written on Chapter2_v1_handout.pdf (72 pages, 2839822 bytes).
+Output written on Chapter2_v1_handout.pdf (73 pages, 2947543 bytes).
 PDF statistics:
- 548 PDF objects out of 1000 (max. 8388607)
- 407 compressed objects within 5 object streams
- 145 named destinations out of 1000 (max. 500000)
- 190 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 556 PDF objects out of 1000 (max. 8388607)
+ 413 compressed objects within 5 object streams
+ 147 named destinations out of 1000 (max. 500000)
+ 195 words of extra memory for PDF output out of 10000 (max. 10000000)
 

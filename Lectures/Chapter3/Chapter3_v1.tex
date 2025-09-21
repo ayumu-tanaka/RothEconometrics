@@ -231,7 +231,7 @@ What we mean by a ``good approximation'' is formalized by asymptotic statistics,
 \item The \textbf{Law of Large Numbers} (LLN) says that when $N$ is large, $\hat\mu$ is close to $\mu$ with very high probability
 
 \pause
-\item The \textbf{Central Limit Theorem} (CLT) says that when $N$ is large, the distribution of $\hat\mu$ is approximately normally distributed with mean $\mu$ and variance $\sigma^2/n$
+\item The \textbf{Central Limit Theorem} (CLT) says that when $N$ is large, the distribution of $\hat\mu$ is approximately normally distributed with mean $\mu$ and variance $\sigma^2/N$
 
 \pause
 \item The \textbf{Continuous Mapping Theorem} says that when $N$ is large, continuous functions of $\hat\mu$, say $g(\hat\mu)$, are also close to $g(\mu)$
@@ -262,13 +262,13 @@ Intuitively, a random variable $X_N$ \textbf{converges in probability} to $x$ if
 
 \pause
 \item
-Formally, we say $X_N$ converges in probability to $x$,  $X_n \rightarrow_p x$ or $plim \, X_n =x $, if for all $\epsilon > 0$, 
+Formally, we say $X_N$ converges in probability to $x$,  $X_N \rightarrow_p x$ or $plim \, X_N =x $, if for all $\epsilon > 0$, 
 
 $$P(|X_N - x| > \epsilon) \rightarrow 0 $$
 
 \pause
 \item 
-If $X_n \rightarrow_p x$ for a constant $x$, we say $X_n$ is \textit{consistent} for $x$
+If $X_N \rightarrow_p x$ for a constant $x$, we say $X_N$ is \textit{consistent} for $x$
 
 \pause
 \item
@@ -292,9 +292,9 @@ Typically $x$ is a constant, although we will sometimes also say $X_N \rightarro
 
 By the law of iterated expectations, 
 \begin{align*}
-E[ (X_N - x)^2 ]=& P( |X_n - x| > \epsilon ) E[ (X_N - x)^2 | |X_n - x| > \epsilon ] + \\
-& P( |X_n - x| \leq \epsilon ) E[ (X_N - x)^2 | |X_n - x| \leq \epsilon ]	 \\
-\pause \geq &  P( |X_n - x| > \epsilon ) \epsilon^2 + 0 
+E[ (X_N - x)^2 ]=& P( |X_N - x| > \epsilon ) E[ (X_N - x)^2 | |X_N - x| > \epsilon ] + \\
+& P( |X_N - x| \leq \epsilon ) E[ (X_N - x)^2 | |X_N - x| \leq \epsilon ]	 \\
+\pause \geq &  P( |X_N - x| > \epsilon ) \epsilon^2 + 0 
 \end{align*}
 \pause
 \noindent This implies that 
@@ -382,7 +382,7 @@ Hence, $\hat\mu_N \rightarrow_p \mu$ by our ``useful fact''.
 		
 		\pause
 		\item
-		Definition: We say that $X_N$ converges in distribution to a continuously distributed variable $X$, denoted $X_n \rightarrow_d X$ or $X_n \Rightarrow X$, if the CDF of $X_N$ converges (pointwise) to the CDF of $X$,
+		Definition: We say that $X_N$ converges in distribution to a continuously distributed variable $X$, denoted $X_N \rightarrow_d X$ or $X_N \Rightarrow X$, if the CDF of $X_N$ converges (pointwise) to the CDF of $X$,
 		
 		$$F_{X_N}(x) \rightarrow F_{X}(x) \text{ for all } x$$ 
 		
@@ -591,10 +591,10 @@ Suppose that $X_N \rightarrow_p c$ for a constant $c$, and $Y_N \rightarrow_d Y$
 $X_N + Y_N \rightarrow_d c + Y$. \pause
 
 \item
-$X_n Y_n \rightarrow_d c Y$. \pause
+$X_N Y_N \rightarrow_d c Y$. \pause
 
 \item
-If $c \neq 0$, then $Y_n/ X_n \rightarrow_d Y /c$. 
+If $c \neq 0$, then $Y_N/ X_N \rightarrow_d Y /c$. 
 
 \pause
 \item
@@ -607,7 +607,7 @@ Analogous versions apply for vector-valued random variables.
 
 \begin{wideitemize}
 \item
-Recall that when $Y_i \sim \mathrm{N}(\mu,\sigma^2)$, we showed that the $t$-statistic $\hat{t} = \frac{\hat\mu - \mu_0}{\sigma / \sqrt{n}} \sim  \mathrm{N}(0,1)$ under $H_0: \mu = \mu_0$.
+Recall that when $Y_i \sim \mathrm{N}(\mu,\sigma^2)$, we showed that the $t$-statistic $\hat{t} = \frac{\hat\mu - \mu_0}{\sigma / \sqrt{N}} \sim  \mathrm{N}(0,1)$ under $H_0: \mu = \mu_0$.
 
 \pause
 \item 
@@ -624,7 +624,7 @@ By CMT and LLN (as shown above), $\hat\sigma \rightarrow_p \sigma$.
 
 \pause
 \item
-Thus, by Slutsky's lemma, $\hat{t} = \dfrac{\hat\mu - \mu_0}{ \hat\sigma /\sqrt{n} } \rightarrow_d N(0,1)$.
+Thus, by Slutsky's lemma, $\hat{t} = \dfrac{\hat\mu - \mu_0}{ \hat\sigma /\sqrt{N} } \rightarrow_d N(0,1)$.
 
 \pause
 \item

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2021.7.13)  9 OCT 2023 20:19
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2021.7.13)  15 SEP 2025 08:15
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1685,7 +1685,7 @@ Package rerunfilecheck Info: File `Chapter3_v1_handout.out' has not changed.
 Here is how much of TeX's memory you used:
  29445 strings out of 478994
  544581 string characters out of 5858184
- 846321 words of memory out of 5000000
+ 845321 words of memory out of 5000000
  46129 multiletter control sequences out of 15000+600000
  531959 words of font info for 159 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
@@ -1708,7 +1708,7 @@ ve/2021/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/t
 exlive/2021/texmf-dist/fonts/type1/urw/symbol/usyr.pfb></usr/local/texlive/2021
 /texmf-dist/fonts/type1/urw/symbol/usyr.pfb></usr/local/texlive/2021/texmf-dist
 /fonts/type1/urw/times/utmr8a.pfb>
-Output written on Chapter3_v1_handout.pdf (37 pages, 862004 bytes).
+Output written on Chapter3_v1_handout.pdf (37 pages, 861987 bytes).
 PDF statistics:
  331 PDF objects out of 1000 (max. 8388607)
  238 compressed objects within 3 object streams
