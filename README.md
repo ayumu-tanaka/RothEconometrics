@@ -3,7 +3,7 @@ This repository contains the lecture slides from my undergrad econometrics cours
 Links to the PDF handouts and raw latex files are below. You can find the latex source files in the Github repo.
 
 Chapter 1: What is econometrics? 
-[[PDF](Lectures/Chapter1/Chapter1_v1_handout.pdf) | [PDF w/animations](Lectures/Chapter1/Chapter1_v1.pdf) | [TeX](Lectures/Chapter1/Chapter1_v1.tex)]
+[[PDF](Lectures/Chapter1/Chapter1_v1_handout.pdf) | [PDF w/animations](Lectures/Chapter1/Chapter1_v1.pdf) | [TeX](Lectures/Chapter1/Chapter1_v1.tex)] [日本語](Lectures/Chapter1/Chapter1_v1_handout_JP.pdf)
 
 Chapter 2: Probability and Statistics
 [[PDF](Lectures/Chapter2/Chapter2_v1_handout.pdf) | [PDF w/animations](Lectures/Chapter1/Chapter2_v1.pdf) | [TeX](Lectures/Chapter2/Chapter2_v1.tex)]
