@@ -1,0 +1,697 @@
+\ifdefined\ishandout
+\documentclass[11pt,handout]{beamer}
+\else
+\documentclass[11pt]{beamer}
+\fi
+
+% 日本語対応
+\usepackage{luatexja}
+\usepackage{luatexja-fontspec}
+\renewcommand{\kanjifamilydefault}{\gtdefault}
+
+\usepackage{mathptmx}
+\renewcommand{\sfdefault}{lmss}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\PassOptionsToPackage{normalem}{ulem}
+\usepackage{ulem}
+\usepackage{caption}
+\captionsetup{labelformat=empty}
+\usepackage{bbm}
+\usepackage{upgreek}
+\setbeamertemplate{section in toc}[sections numbered]
+\makeatletter
+\usepackage{caption} 
+\captionsetup[table]{skip=10pt}
+\newcommand\makebeamertitle{\frame{\maketitle}}%
+\AtBeginDocument{%
+  \let\origtableofcontents=\tableofcontents
+  \def\tableofcontents{\@ifnextchar[{\origtableofcontents}{\gobbletableofcontents}}
+  \def\gobbletableofcontents#1{\origtableofcontents}
+}
+
+\setbeamersize{text margin left= .8em,text margin right=1em} 
+\newenvironment{wideitemize}{\itemize\addtolength{\itemsep}{10pt}}{\enditemize}
+\newenvironment{wideitemizeshort}{\itemize}{\enditemize}
+
+\def\Tiny{\fontsize{7pt}{8pt}\selectfont}
+\def\Normal{\fontsize{8pt}{10pt}\selectfont}
+
+\usetheme{Madrid}
+\usecolortheme{lily}
+\useinnertheme{rounded}
+
+\setbeamertemplate{footline}{\hfill\Normal{\insertframenumber/\inserttotalframenumber}}
+\setbeamertemplate{navigation symbols}{}
+
+\newenvironment{changemargin}[2]{%
+\begin{list}{}{%
+\setlength{\topsep}{0pt}%
+\setlength{\leftmargin}{#1}%
+\setlength{\rightmargin}{#2}%
+\setlength{\listparindent}{\parindent}%
+\setlength{\itemindent}{\parindent}%
+\setlength{\parsep}{\parskip}% 
+}%
+\item[]}{\end{list}}
+
+\setbeamertemplate{footline}{\hfill\insertframenumber/\inserttotalframenumber}
+\setbeamertemplate{navigation symbols}{}
+
+\usepackage{graphicx}
+\usepackage{epsfig}
+\usepackage{bm}
+\usepackage{epsf}
+\usepackage{float}
+\usepackage[final]{pdfpages}
+\usepackage{multirow}
+\usepackage{colortbl}
+\usepackage{xkeyval}
+\usepackage{listings}
+\usepackage{ifthen}
+\usepackage{tikz}
+
+\usepackage{setspace}
+\usepackage{ragged2e}
+
+\setbeamersize{text margin left=1em,text margin right=1em} 
+
+% Table formatting
+\usepackage{booktabs}
+
+% Decimal align
+\usepackage{dcolumn}
+\newcolumntype{d}[0]{D{.}{.}{5}}
+
+\newcommand\independent{\protect\mathpalette{\protect\independenT}{\perp}}
+\def\independenT#1#2{\mathrel{\rlap{$#1#2$}\mkern2mu{#1#2}}}
+
+\global\long\def\expec#1{\mathbb{E}\left[#1\right]}
+\global\long\def\var#1{\mathrm{Var}\left[#1\right]}
+\global\long\def\cov#1{\mathrm{Cov}\left[#1\right]}
+\global\long\def\prob#1{\mathrm{Prob}\left[#1\right]}
+\global\long\def\one{\mathbf{1}}
+\global\long\def\diag{\operatorname{diag}}
+\global\long\def\expe#1#2{\mathbb{E}_{#1}\left[#2\right]}
+\DeclareMathOperator*{\plim}{\text{plim}}
+
+\usepackage{appendixnumberbeamer}
+\renewcommand{\thefootnote}{}
+
+\setbeamertemplate{footline}
+        {
+      \leavevmode%
+\hfill
+        \insertframenumber{}\hspace*{2ex}\vspace{1ex}
+}
+
+\definecolor{blue}{RGB}{0, 0, 210}
+\definecolor{red}{RGB}{170, 0, 0}
+
+\makeatother
+
+\usepackage[english]{babel}
+
+\usepackage{tikz}
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{             \node[circle,ball color=structure.fg, shade,   color=white,inner sep=1.2pt] (char) {\tiny #1};}} 
+
+\makeatletter
+\let\save@measuring@true\measuring@true
+\def\measuring@true{%
+  \save@measuring@true
+  \def\beamer@sortzero##1{\beamer@ifnextcharospec{\beamer@sortzeroread{##1}}{}}%
+  \def\beamer@sortzeroread##1<##2>{}%
+  \def\beamer@finalnospec{}%
+}
+\makeatother
+
+\begin{document}
+
+%% タイトルスライド
+\begin{frame}[noframenumbering]{}
+\vspace{0.5cm}
+\title[]{第1章：ECON 1630 イントロダクション}
+\author{Jonathan Roth}
+\date{数理計量経済学 I \\ ブラウン大学\\} 
+\titlepage {\small{}\ }\thispagestyle{empty} \vspace{-30pt}
+
+\end{frame}
+ 
+\begin{frame}{アウトライン}
+
+1. 講義の進め方について
+\vspace{0.8cm}
+
+2. 計量経済学とは何か？
+\vspace{0.8cm}
+
+3. なぜ計量経済学は難しいのか？
+\vspace{0.8cm}
+
+4. コース・ロードマップ
+
+\end{frame}
+
+\begin{frame}{自己紹介}
+\vspace{0.2cm}
+ECON 1630へようこそ！皆さんに教えるのを楽しみにしています。
+\vspace{0.5cm}
+
+担当教授：Jonathan Roth（ジョナサン・ロス）
+
+\begin{itemize}
+\item グループ・オフィスアワー（Zoom） (\href{https://brown.zoom.us/my/jonroth}{\uline{リンク}}): 月曜 2:20-2:50 
+\item 個別オフィスアワー：通常 火曜 3:00-4:00。私のウェブサイトで予約してください： \href{https://jonathandroth.github.io/OfficeHours/}{\uline{こちら}}、8 Fones Alley 014（希望があればZoomも可）
+
+\end{itemize}
+\vspace{0.4cm}
+
+\pause{}
+
+大学院生TA：Moritz Poll, Max Grozovsky \\
+
+学部生TA：Matt Kutam, Preetish Juneja（過去の優秀な学生たちです！）
+
+\begin{itemize}
+	\item
+	すべてのTAがオフィスアワー（OH）を設けます。
+	
+	\item
+	大学院生TAは週次のセッションを開催します。
+	
+	\begin{itemize}
+		\item 
+		内容の復習とコーディングの指導を行います。
+	\end{itemize}
+	
+	\item
+	TAのOHとセッションの時間・場所は、近日中にCanvasで発表します。
+\end{itemize}
+ 
+\end{frame}
+
+\begin{frame}{CanvasとEdDiscussion}
+
+講義資料や連絡事項はCanvasに掲載されます： {\url{https://canvas.brown.edu/courses/1100468}} \bigskip 
+
+CanvasページにはEdDiscussionボードがあり、質問（や回答）に最適です。TAが質問をチェックします。
+
+\end{frame}
+
+\begin{frame}
+\vspace{0.2cm}
+授業時間：
+
+\begin{itemize}
+\item 講義：月・水 8:30-9:50 (S01) または 3:00-4:20pm (S02)。\\ \textbf{授業後に録画がオンラインで公開されます。}
+\vspace{0.1cm}
+\item TAセッション：時間・場所は未定
+
+
+\vspace{0.1cm}
+\item \textbf{出席}は必須ではありませんが、\textbf{強く推奨}されます。
+\end{itemize}
+\vspace{0.3cm}
+
+\pause{}
+
+履修要件：
+
+\begin{itemize}
+\item 多変数微積分、確率・統計、線形代数
+\vspace{0.1cm}
+\item 証明の読み書きやコード作成に関するある程度の経験
+\end{itemize}
+\vspace{0.2cm}
+
+\pause{}
+
+ソフトウェア：
+
+\begin{itemize}
+\item 統計分析のデフォルトは \textbf{Stata} です（TAセッションで扱います）。
+	\begin{itemize}
+		\item 
+		代わりに \textbf{R} を使用しても構いません。TAはRにも精通しています。
+	\end{itemize}
+\vspace{0.1cm}
+\item 課題の作成には \textbf{LaTeX} を推奨（任意、加点対象）。
+\vspace{0.1cm}
+\item ソフトウェアの利用で問題があれば相談してください。
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\vspace{0.1cm}
+評価方法：
+\begin{itemize}
+\item 課題（Problem Sets）計6回：約2週間おきにGradescopeで提出。
+\item 中間試験：1回（11月3日、授業内）
+\item 期末試験：1回
+\vspace{0.1cm}
+
+\end{itemize}
+\vspace{0.2cm}
+
+\pause{}
+
+成績評価：
+
+\begin{itemize}
+\item 課題 30\%、各試験 35\%。
+\vspace{0.1cm}
+\item
+ 課題の最低点は1回分除外します。計画的に使いましょう！
+\vspace{0.1cm}
+\item 課題の締め切りは金曜日の午後4時です。遅延提出は採点されません。協力作業はOKです（協力者の名前を記載してください）。
+\vspace{0.1cm}
+\item 試験は授業内、持ち込み不可ですが、「チートシート」1枚は許可されます。
+\vspace{0.1cm}
+\item LaTeXで課題を作成した場合、5点の加点があります。コードと出力を1つのPDFにまとめて提出してください。
+\end{itemize}
+\vspace{0.2cm}
+
+\end{frame}
+
+\begin{frame}{AIポリシー}
+
+AIは有用なツールであり、無視すべきではないと考えています。しかし、学習を妨げるのではなく、促進する形で利用する必要があります。 \medskip
+	
+	\begin{itemize}
+		\item \textbf{試験 (70\%):} 持ち込み不可、\emph{AIの使用は禁止}です。
+		\item \textbf{課題:} \emph{学習の助けになる}ならAI使用OKですが、学習や努力の代わりにするのはNGです。
+		\begin{itemize}
+			\item \textbf{良い例:} RやStataのエラーのデバッグ。
+			\item \textbf{悪い例:} 自由記述の回答をAIに書かせる。
+		\end{itemize}
+		\item 課題での使用を厳格に取り締まることはしませんが、努力を怠れば試験で良い成績を収めるのは難しいでしょう。
+		\item 各課題に簡潔な \textbf{AI利用状況の申告} を含めてください。
+	\end{itemize}
+	
+\end{frame}
+
+\begin{frame}
+	講義資料：
+	
+	\begin{itemize}
+		\item 主要資料：講義および講義スライド（Canvasに掲載）。
+		
+		\item 参考書籍（任意）：Stock \& Watson -- Intro to Econometrics (4th ed)
+\end{itemize}
+\bigskip
+運営について質問はありますか？
+
+\end{frame}
+
+\begin{frame}{アウトライン}
+
+1. 講義の進め方 $\checkmark$
+\vspace{0.8cm}
+
+2. 計量経済学とは何か？
+\vspace{0.8cm}
+
+3. パラメータ、推定対象、推定量
+\vspace{0.8cm}
+
+4. コース・ロードマップ
+
+\end{frame}
+
+\begin{frame}{計量経済学とは何か？}
+
+\vspace{0.2cm}
+$\rightarrow$ 経済的な\uline{問い}に対して\uline{データ}を用いて答えるための統計的ツールキット
+\bigskip 
+
+どのような問いに興味があるでしょうか：
+\pause
+\medskip
+
+\begin{itemize}
+\item<1-> 1960年以降、経済的格差は拡大したか？
+	\begin{itemize}
+		\item<3-> \textbf{記述的質問：} 現状（または過去）がどうであるかを問う。
+	\end{itemize}
+\item<1-> 最低賃金の引き上げは雇用にどう影響するか？
+	\begin{itemize}
+		\item<4-> \textbf{因果的質問：} 反実仮想（もし〜だったら）の世界で何が起きたかを問う。
+	\end{itemize}
+\item<1-> 次の四半期の失業率はどうなるか？
+	\begin{itemize}
+	\item<5-> \textbf{予測的質問：} 将来何が起きるかを問う。
+\end{itemize}
+
+\end{itemize}
+\medskip
+
+\pause 
+\only<6->{
+このコースでは、主に記述的質問と因果的質問に焦点を当てますが、特に因果的質問を重視します。
+}
+
+\end{frame}
+
+\begin{frame}{なぜこれらの問いに答えるのが難しいのか？}
+
+\begin{wideitemize}
+\item
+記述的質問について：全\textbf{母集団}ではなく、個人の\textbf{サンプル}データしか観察できない。
+	\begin{itemize}
+		\item 
+		例：米国の所得分布の変化を知りたいが、一部の労働者への調査（サーベイ）結果しか手に入らない。
+	\end{itemize}
+\pause
+
+\item 最良のシナリオ：\\サンプルが母集団から\textbf{無作為（ランダム）}に選ばれている。
+	\begin{itemize}
+		\item 
+		例：全労働者の名前が入った帽子から、調査対象の労働者を引いた場合。
+		
+		\item
+		この場合でも、偶然（確率的）にサンプルが母集団と異なる特性を持つ可能性を考慮する必要がある。
+	\end{itemize}
+
+\pause
+\item 最悪のシナリオ：サンプルが関心のある母集団を\textit{代表していない（偏っている）}。
+	\begin{itemize}
+		\item 
+		例：特定の特性を持つ労働者ほど調査に回答しやすい場合など。
+	\end{itemize}
+\end{wideitemize}
+
+\end{frame}
+
+\begin{frame}
+\centering
+\includegraphics[width = 0.7\linewidth]{dewey-defeats-truman}
+\begin{itemize}
+	\item 
+	1948年、シカゴ・トリビューン紙は有権者調査に基づき、トーマス・デューイがハリー・トルーマンを破ったと報じた。
+	
+	\pause
+	\item
+	しかし、調査は電話で行われた。1948年当時、電話を持っていたのは富裕層のみであった：サンプル $\neq$ 母集団 $\rightarrow$ 誤った結果に！
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\textit{選択バイアス（Selection bias）}とは、デューイ対トルーマンの例のように、サンプルが関心のある母集団から無作為に抽出されていない状況を指します。
+
+\centering
+\includegraphics[width = 0.6\linewidth]{selection_bias_xkcd.png}
+\end{frame}
+
+\begin{frame}{なぜこれらの問いに答えるのが難しいのか？（第2部）}
+\begin{wideitemize}
+	\item
+	因果的質問に答えるのは、記述的質問よりもさらに\textit{難しい}ことが多い。なぜか？
+	
+	\pause
+	\item
+	因果的質問には、記述的な要素（現実の結果はどうなっているか？）と、\textit{反実仮想的}な要素（別の処置を受けていたらどうなっていたか？）の両方が含まれるから。
+	
+	\pause
+	\item
+	例：URIではなくブラウン大学に進学したことが、将来の所得に与える因果的効果は？
+		\begin{itemize}
+			\item
+			記述的質問：ブラウン大の卒業生は卒業後いくら稼いでいるか？
+			
+			\item
+			反実仮想的質問：ブラウン大の学生が（もし）URIに行っていたら、いくら稼いでいたか？
+		\end{itemize}
+		
+	\pause 	
+	\item 反実仮想的質問には、データだけでは決して答えられない。それらを知るためには追加的な仮定が必要！
+\end{wideitemize}	
+\end{frame}
+
+\begin{frame}{問題を分割する}
+	\begin{wideitemize}
+		
+		\item
+		因果的質問を考えるとき、問題を2つに分けると分かりやすくなる。
+		
+		\item
+		\textbf{識別（Identification）：} 母集団全体の「観測可能なデータ」が手に入るとしたら、関心のあるパラメータ（因果的効果）について何が学べるか？
+		\begin{itemize}
+			\item 
+			観測された結果と、異なる処置の下で実現したであろう結果（潜在的結果）がどう関連しているかについての仮定が必要。
+		\end{itemize}
+		
+		\item
+		\textbf{統計（Statistics）：} 手元にある有限のサンプルから、関心のある母集団全体について何が言えるか？
+			\begin{itemize}
+				\item 
+				データが母集団から生成されるプロセスを理解する必要がある。
+			\end{itemize} 	
+		
+	\end{wideitemize}	
+	
+\end{frame}
+
+\begin{frame}{これらのステップを考えるための枠組み}
+	
+\begin{wideitemize}
+
+\item \textbf{サンプル（Sample）：} 実際に観察されるデータ。
+	\begin{itemize}
+		\item
+		ブラウン大とURIの卒業生の所得に関する調査データ。
+	\end{itemize}
+
+\pause
+\item \textbf{推定量（Estimator）：} サンプルデータの関数。
+	\begin{itemize}
+		\item 調査サンプルにおけるブラウン大生とURI生の所得の差。
+	\end{itemize}
+
+\pause
+\item \textbf{推定対象（Estimand）：} 母集団の「観測可能なデータ」の関数。
+	\begin{itemize}
+		\item すべてのブラウン大生とURI生の所得の差（母集団レベル）。
+	\end{itemize}
+
+\pause 
+\item \textbf{ターゲット・パラメータ（構造的パラメータ）：} 本当に知りたいもの。
+	\begin{itemize}
+		\item URIと比較したときの、ブラウン大進学による所得への因果的効果。
+	\end{itemize}
+
+\end{wideitemize}	
+
+\medskip
+\pause
+\begin{wideitemize}
+
+\item サンプルから構築された \textbf{推定量} を通じて \textbf{推定対象} について学ぶプロセスを、\textbf{統計的推定・推論}と呼ぶ。
+
+\pause 
+\item \textbf{推定対象} から \textbf{パラメータ} について学ぶプロセスを、\textbf{識別}と呼ぶ。
+
+\end{wideitemize}
+	
+\end{frame}
+
+\begin{frame}
+	\includegraphics[width=1.2\textwidth]{BigPicture}
+\end{frame}
+
+\begin{frame}{数式を導入しましょう...}
+\begin{wideitemize}
+	\item \textbf{潜在的結果（Potential Outcomes）} の表記を導入します。
+		\begin{itemize}
+			\item 
+			因果関係を考えるための非常に強力な枠組みです！\\
+			Canvasにある2021年ノーベル賞の解説記事を読んでください。
+		\end{itemize}
+	
+	\pause 
+	\item $D_i$ = 処置を受けたかどうかの指標（ブラウン大なら1、URIなら0）
+	
+	\pause
+	\item $Y_i(1)$ = 処置を受けたときの結果 = ブラウン大での所得
+	\item $Y_i(0)$ = 対照群（処置なし）の結果 = URIでの所得
+	
+	\pause 
+	\item 観測される結果 $Y_i$ は、$D_i = 1$ なら $Y_i(1)$、$D_i = 0$ なら $Y_i(0)$ となる。（$Y_i$ は実際の所得）
+	
+	\pause
+	\item
+	観測結果は $Y_i = D_i Y_i(1) + (1-D_i) Y_i(0)$ と書ける。
+\end{wideitemize}
+
+\end{frame}
+
+\begin{frame}
+\begin{wideitemizeshort}
+	\item
+	サンプルの例：$(Y_i,D_i)$、$i=1,...N$。所得と出身校のデータ。
+	
+	\pause 
+	
+	\item
+	推定量の例：
+		\begin{itemize}
+			\item
+			サンプルにおける、ブラウン大進学者とURI進学者の所得の標本平均の差：
+			
+			$$ \underbrace{\frac{1}{N_1} \sum_{i:D_i=1} Y_i}_{\text{サンプルのブラウン大平均}} - \underbrace{\frac{1}{N_0} \sum_{i:D_i=0} Y_i}_{\text{サンプルのURI平均}}$$		
+		\end{itemize}
+	
+	\pause
+		\item
+		推定対象の例：
+		
+				\begin{itemize}
+			\item
+			母集団における、ブラウン大進学者とURI進学者の平均所得の差：
+			
+			$$\underbrace{ E[ Y_i | D_i = 1] }_{\text{母集団のブラウン大平均}} - \underbrace{E[Y_i | D_i = 0]}_{\text{母集団のURI平均}}$$
+		 
+		\end{itemize}
+	\pause 
+	
+	\item
+	ターゲット・パラメータの例：
+		\begin{itemize}
+			\item ブラウン大進学者の「ブラウン大に進んだこと」による因果的効果：
+			$\underbrace{E[Y_i(1) | D_i =1]}_{\text{ブラウン大生のブラウン大での所得}} - \underbrace{E[Y_i(0) | D_i = 1]}_{\text{ブラウン大生がもしURIに行っていた場合の所得}} $。
+		\end{itemize}
+\end{wideitemizeshort}
+\end{frame}
+
+\begin{frame}{なぜ因果的識別は難しいのか？}
+	
+	\begin{wideitemize}
+		
+		\item
+		思考実験：すべてのブラウン大とURIの卒業生の所得データがあるとしましょう。
+		
+		
+		\item
+		データから学べること：
+		$$\color{teal} \underbrace{E[ Y_i(1) | D_i=1  ] }_{\text{ブラウン大生のブラウン大での所得}} \hspace{0.5cm} \text{および} \hspace{0.5cm} \underbrace{E[Y_i(0) | D_i = 0]	}_{\text{URI生のURIでの所得}}$$
+		
+		\pause 
+		\item
+		ブラウン大進学者に対するブラウン大の因果的効果は：
+		$$ \color{teal}{\underbrace{E[ Y_i(1) | D_i=1  ] }_{\text{ブラウン大生のブラウン大での所得}}} - \color{red}{ \underbrace{E[ Y_i(0) | D_i=1  ] }_{\text{ブラウン大生のURIでの（反実仮想的な）所得}}}$$ 
+		
+		\pause 
+		\item
+		データは $\color{red}{ \underbrace{E[ Y_i(0) | D_i=1 ] }_{\text{ブラウン大生のURIでの所得}}}$ を教えてくれません。なぜか？
+		\pause
+			\begin{itemize}
+				\item 
+				なぜなら、ブラウン大の学生がURIに行っているところを、我々は決して観察できないからです！
+			\end{itemize} 
+		
+	\end{wideitemize}
+	
+\end{frame}
+
+\begin{frame}
+	\begin{wideitemize}
+		\item
+		この問題を解決するための1つのアイデアは、次のように仮定することです：
+		
+		$$ \color{red}{ \underbrace{E[ Y_i(0) | D_i=1  ] }_{\text{ブラウン大生のURIでの所得}}} = \color{teal}{ \underbrace{E[ Y_i(0) | D_i=0 ] }_{\text{URI生のURIでの所得}}}$$
+		
+		\item
+		なぜこれが誤った答えを導く可能性があるのでしょうか？
+		
+		\pause
+		
+		\item
+		ブラウン大の学生は、進学先に関係なく所得に影響を与えるような他の側面において、URIの学生とは異なっている可能性があるからです。
+		
+			\begin{itemize}
+				\item 
+				学力、家庭環境、キャリアの目標など。
+			\end{itemize}
+		
+		\item
+		これらの違いは \textit{欠落変数（omitted variables）} や \textit{交絡因子（confounding factors）} と呼ばれます。
+	\end{wideitemize}
+\end{frame}
+
+\begin{frame}{実験はどうでしょうか？}
+\begin{wideitemize}
+\item
+因果的効果を明らかにするための「黄金律（ゴールドスタンダード）」は、ランダム化比較試験（RCT）、いわゆる実験です。
+
+\item
+ブラウン大とURIの事務局が、誰がどちらの大学に入るかをランダムに決めたとします（簡単のため、大学はこの2つだけと仮定します）。
+
+\item
+大学がランダムに割り当てられるため、ブラウン大生とURI生の唯一の違いは「どちらの大学に行ったか」だけになります。
+
+\item
+したがって、次が成り立ちます：
+
+		$$ \color{red}{ \underbrace{E[ Y_i(0) | D_i=1  ] }_{\text{ブラウン大生のURIでの所得}}} = \color{teal}{ \underbrace{E[ Y_i(0) | D_i=0 ] }_{\text{URI生のURIでの所得}}}$$
+		
+		交絡因子をすべて排除したからです。
+
+\end{wideitemize}
+\end{frame}
+
+\begin{frame}{しかし、実験の実施は困難、または不可能なことが多い}
+	\begin{wideitemize}
+	
+	\item
+	残念ながら、ブラウン大やURIは進学先をランダムに決めさせてくれません。
+		\begin{itemize}
+			\item
+			少なくとも今はまだ！もし大学を説得できたら、素晴らしい卒業論文になるでしょう。
+		\end{itemize}
+
+	\item
+	同様に、州に最低賃金やその他の政策をランダム化させることも困難です。
+	
+	\item
+	場合によっては、ランダム化が単に困難なだけでなく、非倫理的になることもあります。
+	
+		\begin{itemize}
+			\item 
+			「配偶者の死が労働供給に与える因果的効果は？」など。
+		\end{itemize}	
+	
+	\pause
+	\item
+	このコースでは、実験を行うことが不可能な場合に、経済学者が用いる手法について学びます。
+	\end{wideitemize}
+\end{frame}
+
+\begin{frame}{コース・ロードマップ -- 今後の展望}
+	\begin{wideitemize}
+		\item
+		\textbf{パートI（約7回）：確率・統計の復習}。以下を議論するための数学的な言語を学びます：
+		
+			\begin{enumerate}
+				\item 
+				\textit{統計的推定・推論：} 観察されたサンプルが、関心のある母集団とどう関連しているか。
+				
+				\item
+				\textit{識別：} 母集団の観察可能な特徴が、関心のある（因果的）パラメータとどう関連しているか。
+			\end{enumerate}
+		\pause 
+		
+		\item
+		\textbf{パートII（約9回）：線形回帰}。計量経済学における推定の主力モデルである最小二乗法（OLS）について議論します。どのような場合にうまく機能し、どのような場合に失敗するのでしょうか？
+		
+		\pause
+		\item
+		\textbf{パートIII（約7回）：その他の「擬似実験的」戦略}。実験が利用できない場合に実験を「模倣」するための戦略を学びます。操作変数法（IV）や回帰不連続デザイン（RD）などが含まれます。
+			 
+	\end{wideitemize}
+\end{frame}
+
+\end{document}

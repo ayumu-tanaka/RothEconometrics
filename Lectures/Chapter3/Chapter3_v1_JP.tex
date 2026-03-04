@@ -1,0 +1,825 @@
+\ifdefined\ishandout
+\documentclass[11pt,handout]{beamer}
+\else
+\documentclass[11pt]{beamer}
+\fi
+
+% 日本語対応
+\usepackage{luatexja}
+\usepackage{luatexja-fontspec}
+\renewcommand{\kanjifamilydefault}{\gtdefault}
+
+\usepackage{mathptmx}
+\renewcommand{\sfdefault}{lmss}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\PassOptionsToPackage{normalem}{ulem}
+\usepackage{ulem}
+\usepackage{caption}
+\captionsetup{labelformat=empty}
+\usepackage{bbm}
+\usepackage{upgreek}
+\setbeamertemplate{section in toc}[sections numbered]
+\makeatletter
+\usepackage{caption} 
+\captionsetup[table]{skip=10pt}
+\newcommand\makebeamertitle{\frame{\maketitle}}%
+\AtBeginDocument{%
+	\let\origtableofcontents=\tableofcontents
+	\def\tableofcontents{\@ifnextchar[{\origtableofcontents}{\gobbletableofcontents}}
+	\def\gobbletableofcontents#1{\origtableofcontents}
+}
+
+\def\Tiny{\fontsize{7pt}{8pt}\selectfont}
+\def\Normal{\fontsize{8pt}{10pt}\selectfont}
+
+\usetheme{Madrid}
+\usecolortheme{lily}
+\useinnertheme{rounded}
+
+\setbeamertemplate{footline}{\hfill\Normal{\insertframenumber/\inserttotalframenumber}}
+\setbeamertemplate{navigation symbols}{}
+
+\newenvironment{changemargin}[2]{%
+	\begin{list}{}{%
+			\setlength{\topsep}{0pt}%
+			\setlength{\leftmargin}{#1}%
+			\setlength{\rightmargin}{#2}%
+			\setlength{\listparindent}{\parindent}%
+			\setlength{\itemindent}{\parindent}%
+			\setlength{\parsep}{\parskip}% 
+		}%
+		\item[]}{\end{list}}
+
+\setbeamertemplate{footline}{\hfill\insertframenumber/\inserttotalframenumber}
+\setbeamertemplate{navigation symbols}{}
+
+\usepackage{graphicx}
+\usepackage{epsfig}
+\usepackage{bm}
+\usepackage{epsf}
+\usepackage{float}
+\usepackage[final]{pdfpages}
+\usepackage{multirow}
+\usepackage{colortbl}
+\usepackage{xkeyval}
+\usepackage{listings}
+\usepackage{ifthen}
+\usepackage{tikz}
+
+\usepackage{setspace}
+\usepackage{ragged2e}
+
+\setbeamersize{text margin left=1em,text margin right=1em} 
+
+% Table formatting
+\usepackage{booktabs}
+
+% Decimal align
+\usepackage{dcolumn}
+\newcolumntype{d}[0]{D{.}{.}{5}}
+
+\global\long\def\expec#1{\mathbb{E}\left[#1\right]}
+\global\long\def\var#1{\mathrm{Var}\left[#1\right]}
+\global\long\def\cov#1{\mathrm{Cov}\left[#1\right]}
+\global\long\def\prob#1{\mathrm{Prob}\left[#1\right]}
+\global\long\def\one{\mathbf{1}}
+\global\long\def\diag{\operatorname{diag}}
+\global\long\def\expe#1#2{\mathbb{E}_{#1}\left[#2\right]}
+\DeclareMathOperator*{\plim}{\text{plim}}
+
+\usepackage{appendixnumberbeamer}
+\renewcommand{\thefootnote}{}
+
+\setbeamertemplate{footline}
+{
+	\leavevmode%
+\hfill
+	\insertframenumber{}\hspace*{2ex}\vspace{1ex}
+}
+
+\definecolor{blue}{RGB}{0, 0, 210}
+\definecolor{red}{RGB}{170, 0, 0}
+
+\makeatother
+
+\usepackage[english]{babel}
+
+\usepackage{tikz}
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{             \node[circle,ball color=structure.fg, shade,   color=white,inner sep=1.2pt] (char) {\tiny #1};}} 
+
+\makeatletter
+\let\save@measuring@true\measuring@true
+\def\measuring@true{%
+	\save@measuring@true
+	\def\beamer@sortzero##1{\beamer@ifnextcharospec{\beamer@sortzeroread{##1}}{}}%
+	\def\beamer@sortzeroread##1<##2>{}%
+	\def\beamer@finalnospec{}%
+}
+\makeatother
+
+\setbeamersize{text margin left= .8em,text margin right=1em} 
+\newenvironment{wideitemize}{\itemize\addtolength{\itemsep}{10pt}}{\enditemize}
+\newenvironment{wideitemizeshort}{\itemize}{\enditemize}
+
+\newcommand{\indep}{\perp\!\!\!\!\perp} 
+
+\begin{document}
+
+%% タイトルスライド
+\begin{frame}[noframenumbering]{}
+\vspace{0.5cm}
+\title[]{第3章：漸近統計学}
+\author{Jonathan Roth}
+\date{数理計量経済学 I \\ ブラウン大学\\} 
+\titlepage {\small{}\ }\thispagestyle{empty} \vspace{-30pt}
+
+\end{frame}
+
+\begin{frame}{アウトライン}
+
+1. 概要
+\vspace{0.8cm}
+
+2. 大数の法則、中心極限定理、連続写像定理
+\vspace{0.8cm}
+
+3. 漸近理論の実践への応用
+
+\end{frame}
+
+\begin{frame}{モチベーション}
+
+\begin{wideitemize}
+	
+\item 
+これまでに、標本平均 $\hat\mu$ が分散既知の\textbf{正規分布}に従う場合に、母平均に関する仮説検定を行う方法を見てきました。
+
+\item
+この状況は、$Y_i\sim \mathrm{N}(\mu,\sigma^2)$ かつ $\sigma$ が既知である場合に生じます。
+
+\item
+しかし、このような状況は稀です... より一般的な場合、どのように「推論」を行えばよいでしょうか？
+
+\pause
+
+\item
+幸いなことに、サンプルサイズが大きい場合、標本平均が正規分布に従うという仮定は非常に良い\textbf{近似}になります。
+
+\pause
+\item
+何をもって「良い近似」とするかは、漸近統計学（asymptotic statistics）によって定式化されます。これは $N \rightarrow \infty$ としたときの極限における $\hat\mu$ の分布を考えます。
+	
+\end{wideitemize}		
+
+\end{frame}
+
+\begin{frame}{重要な結果の概要}
+	
+\begin{wideitemize}
+
+\item \textbf{大数の法則}（Law of Large Numbers, LLN）は、$N$ が大きいとき、$\hat\mu$ は非常に高い確率で $\mu$ に近くなることを示します。
+
+\pause
+\item \textbf{中心極限定理}（Central Limit Theorem, CLT）は、$N$ が大きいとき、$\hat\mu$ の分布は近似的に平均 $\mu$、分散 $\sigma^2/N$ の正規分布に従うことを示します。
+
+\pause
+\item \textbf{連続写像定理}（Continuous Mapping Theorem, CMT）は、$N$ が大きいとき、$\hat\mu$ の連続関数、例えば $g(\hat\mu)$ も $g(\mu)$ に近くなることを示します。
+
+\end{wideitemize}	
+\end{frame}
+
+\begin{frame}{アウトライン}
+
+\textcolor{red!75!green!50!blue!25!gray}{1. 概要} $\checkmark$
+\vspace{0.8cm}
+
+2. LLN, CLT, CMT
+\vspace{0.8cm}
+
+\textcolor{red!75!green!50!blue!25!gray}{3. 漸近理論の実践への応用}
+
+\end{frame}
+
+\begin{frame}{確率収束}
+	
+\begin{wideitemize}
+\item
+直感的には、確率変数 $X_N$ が $x$ に\textbf{確率収束（converge in probability）}するとは、$N$ が大きいときに $X_N$ が $x$ に「近い」確率がほぼ1になることを意味します。
+
+\pause
+\item
+形式的には、すべての $\epsilon > 0$ に対して以下が成り立つとき、$X_N$ は $x$ に確率収束するといい、$X_N \rightarrow_p x$ または $plim \, X_N =x $ と表記します：
+
+$$P(|X_N - x| > \epsilon) \rightarrow 0 $$
+
+\pause
+\item 
+定数 $x$ に対して $X_N \rightarrow_p x$ であるとき、$X_N$ は $x$ に対して\textbf{一致性（consistent）}があるといいます。
+
+\pause
+\item
+通常 $x$ は定数ですが、同様の定義で確率変数 $X$ への収束（$X_N \rightarrow X$）を言うこともあります。
+	
+\end{wideitemize}
+
+\end{frame}
+
+\begin{frame}{確率収束（続き）}
+	
+\begin{wideitemize}
+
+\item 有用な事実：もし $E[ (X_N - x)^2 ] \rightarrow 0$ ならば、$X_N \rightarrow_p x$ である。
+
+\pause
+
+\item 
+\textbf{証明}（理解は必須ではありません）：\\
+
+反復期待値の法則より：
+\begin{align*}
+E[ (X_N - x)^2 ]=& P( |X_N - x| > \epsilon ) E[ (X_N - x)^2 | |X_N - x| > \epsilon ] + \\
+& P( |X_N - x| \leq \epsilon ) E[ (X_N - x)^2 | |X_N - x| \leq \epsilon ]	 \\
+\pause \geq &  P( |X_N - x| > \epsilon ) \epsilon^2 + 0 
+\end{align*}
+\pause
+\noindent これは次を意味します：
+$$P( |X_N - x|  > \epsilon ) \leq E[ (X_N - x)^2  ] / \epsilon^2 \text{ （チェビシェフの不等式） }$$
+\pause 
+したがって、$E[ (X_N - x)^2  ] \rightarrow 0$ ならば $P( |X_N - x|  > \epsilon ) \rightarrow 0$ となります。
+
+\end{wideitemize}	
+\end{frame}
+
+\begin{frame}{大数の法則}
+	
+\begin{wideitemize}
+	
+\item \textbf{大数の法則}。$Y_1,...,Y_N$ が $Var(Y_i) = \sigma^2 < \infty$ の分布から独立同一（$iid$）に抽出されているとします。このとき：
+$$\hat\mu_N = \frac{1}{N} \sum_{i=1}^{N} Y_i \rightarrow_p \mu = E[Y_i]$$
+
+\item
+言葉で言えば：サンプルサイズが大きくなるにつれて、標本平均は高い確率で母平均に近くなります。
+
+\pause
+\item
+\textbf{証明：} 前章で $E[\hat\mu_N] = \mu$ および $Var(\hat\mu_N) = \sigma^2 / N$ であることを見ました。 \\
+
+したがって：
+$$Var(\hat\mu_N) = E[ (\hat\mu_N - \mu )^2 ] = \sigma^2/N \rightarrow 0 $$ \\
+
+ゆえに、上記の「有用な事実」により $\hat\mu_N \rightarrow_p \mu$ となります。
+\end{wideitemize}	
+	
+\end{frame}
+
+\begin{frame}{大数の法則のイラスト}
+	\vspace{0.2cm}
+	$Z_i\sim \mathrm{U}(0,1)$ のときの $\frac{1}{N}\sum_i Z_i$ の分布と平均、$\mathbf{N=1}$
+	
+	\begin{center}
+		\includegraphics[scale=0.4]{Stata5.png} \includegraphics[scale=0.25]{sims1_2.png}
+	\end{center}
+	
+\end{frame}
+
+\begin{frame}{大数の法則のイラスト}
+	\vspace{0.2cm}
+	$Z_i\sim \mathrm{U}(0,1)$ のときの $\frac{1}{N}\sum_i Z_i$ の分布と平均、$\mathbf{N=10}$
+	
+	\begin{center}
+		\includegraphics[scale=0.4]{Stata6.png} \includegraphics[scale=0.25]{sims10_2.png}
+	\end{center}
+	
+\end{frame}
+
+\begin{frame}{大数の法則のイラスト}
+	\vspace{0.2cm}
+	$Z_i\sim \mathrm{U}(0,1)$ のときの $\frac{1}{N}\sum_i Z_i$ の分布と平均、$\mathbf{N=100}$
+	
+	\begin{center}
+		\includegraphics[scale=0.4]{Stata7.png} \includegraphics[scale=0.25]{sims100_2.png}
+	\end{center}
+	
+\end{frame}
+
+\begin{frame}{大数の法則のイラスト}
+	\vspace{0.2cm}
+	$Z_i\sim \mathrm{U}(0,1)$ のときの $\frac{1}{N}\sum_i Z_i$ の分布と平均、$\mathbf{N=1000}$
+	
+	\begin{center}
+		\includegraphics[scale=0.4]{Stata8.png} \includegraphics[scale=0.25]{sims1000_2.png}
+	\end{center}
+	
+\end{frame}
+
+\begin{frame}{分布収束}
+	
+	\begin{wideitemize}
+
+		\item
+		シミュレーションにおいて、$N$ が大きくなるにつれて $\hat\mu$ の分布が正規分布に近づいていることに気づいたかもしれません。
+		
+		\item
+		\textbf{分布収束（convergence in distribution）}という概念は、ある分布が別の分布に近づくことの意味を定式化したものです。
+		
+		\pause
+		\item
+		定義：$X_N$ の累積分布関数（CDF）が、連続型確率変数 $X$ の累積分布関数に各点で収束するとき、すなわち：
+		
+		$$F_{X_N}(x) \rightarrow F_{X}(x) \text{ （すべての } x \text{ に対して）}$$ 
+		
+		が成り立つとき、$X_N$ は $X$ に分布収束するといい、$X_N \rightarrow_d X$ または $X_N \Rightarrow X$ と表記します。
+		
+	\end{wideitemize}
+	
+\end{frame}
+
+\begin{frame}{中心極限定理}
+\begin{wideitemize}
+
+\item
+\textbf{中心極限定理（CLT）}は、大標本において標本平均が近似的に正規分布に従うということを定式化したものです。
+
+\pause
+\item
+定理：$Y_1,...,Y_N$ が平均 $\mu = E[Y_i]$、分散 $Var(Y_i) = \sigma^2 < \infty$ の分布から独立同一（$iid$）に抽出されているとします。このとき、標本平均 $\hat\mu = \frac{1}{N} \sum_{i=1}^N Y_i$ は以下を満たします：
+
+$$ \sqrt{N} (\hat\mu - \mu) \rightarrow_d N(0, \sigma^2) $$
+
+\pause
+\item
+言葉で言えば、この定理は次のようなことを意味しています：
+
+\begin{enumerate}
+\normalsize{
+\item 
+元の分布 $Y_i$ がどのような分布（非正規分布でもよい）であっても、
+
+\item
+十分に大きなサンプルの標本平均 $\hat\mu = \frac{1}{N} \sum_i Y_i$ の分布は、（近似的に）正規分布になります！
+}
+\end{enumerate}
+
+\end{wideitemize}	
+
+\end{frame}
+
+\begin{frame}{中心極限定理のイラスト}
+	\vspace{0.2cm}
+	$\hat{\mu}=\frac{1}{N}\sum_i X_i$ の分布 vs. $\mathrm{N}(E[\hat\mu],Var(\hat{\mu}))$：$X_i\sim \mathrm{U}(0,1)$、$\mathbf{N=1}$
+	
+	\begin{center}
+		\includegraphics[scale=0.4]{Stata1.png} \includegraphics[scale=0.25]{sims1.png}
+	\end{center}
+	
+\end{frame}
+
+\begin{frame}{中心極限定理のイラスト}
+	\vspace{0.2cm}
+	$\hat{\mu}=\frac{1}{N}\sum_i X_i$ の分布 vs. $\mathrm{N}(E[\hat\mu],Var(\hat{\mu}))$：$X_i\sim \mathrm{U}(0,1)$、$\mathbf{N=2}$
+	
+	\begin{center}
+		\includegraphics[scale=0.4]{Stata2.png} \includegraphics[scale=0.25]{sims2.png}
+	\end{center}
+	
+\end{frame}
+
+\begin{frame}{中心極限定理のイラスト}
+	\vspace{0.2cm}
+	$\hat{\mu}=\frac{1}{N}\sum_i X_i$ の分布 vs. $\mathrm{N}(E[\hat\mu],Var(\hat{\mu}))$：$X_i\sim \mathrm{U}(0,1)$、$\mathbf{N=5}$
+	
+	\begin{center}
+		\includegraphics[scale=0.4]{Stata3.png} \includegraphics[scale=0.25]{sims5.png}
+	\end{center}
+	
+\end{frame}
+
+\begin{frame}{中心極限定理のイラスト}
+	\vspace{0.2cm}
+	$\hat{\mu}=\frac{1}{N}\sum_i X_i$ の分布 vs. $\mathrm{N}(E[\hat\mu],Var(\hat{\mu}))$：$X_i\sim \mathrm{U}(0,1)$、$\mathbf{N=10}$
+	
+	\begin{center}
+		\includegraphics[scale=0.4]{Stata4.png} \includegraphics[scale=0.25]{sims10.png}
+	\end{center}
+	
+\end{frame}
+
+\begin{frame}{中心極限定理のイラスト II}
+	\begin{center}
+		\includegraphics[width = 0.5\linewidth]{Galton_Board}
+	\end{center}
+	\href{https://www.youtube.com/watch?v=EvHiee7gs9Y}{https://www.youtube.com/watch?v=EvHiee7gs9Y}
+\end{frame}
+
+\begin{frame}
+	\centering
+	\includegraphics[width = 0.5\linewidth]{mind-blown}
+\end{frame}
+
+\begin{frame}{多変量版}
+
+\begin{wideitemize}
+	\item 
+	これまでの結果は、多変量の場合にも自然に拡張されます。
+	
+	\pause
+	\item
+	ベクトル $\mathbf{X_N} \in \mathbb{R}^k$ について、各成分が確率収束するとき $\mathbf{X_N} \rightarrow_p \mathbf{x}$ といいます。
+	
+	\pause
+	\item
+	\textbf{LLN}：平均 $\boldsymbol{\mu}$、有限な分散を持つ $iid$ ベクトル $\mathbf{Y_1},...\mathbf{Y_N}$ の標本平均 $\hat{\boldsymbol{\mu}}_N$ について、$\hat{\boldsymbol{\mu}}_N \rightarrow_p \boldsymbol{\mu}$。
+	
+	\pause
+	\item
+	ベクトル $\mathbf{X_N} \in \mathbb{R}^k$ について、$F_{\mathbf{X_N}}(\mathbf{x}) \rightarrow F_{\mathbf{X}}(\mathbf{x})$ が成り立つとき、$\mathbf{X_N} \rightarrow_d \mathbf{X}$ といいます。
+	
+	\item
+	\textbf{CLT}：平均 $\boldsymbol{\mu}$、有限な分散 $\boldsymbol{\Sigma}$ を持つ $iid$ ベクトル $\mathbf{Y_1},...\mathbf{Y_N}$ の標本平均 $\hat{\boldsymbol{\mu}}_N$ について、$\sqrt{N} (\hat{\boldsymbol{\mu}}_N -\boldsymbol{\mu}) \rightarrow_d \mathrm{N}(\mathbf{0},\boldsymbol{\Sigma})$。
+	
+\end{wideitemize}
+	
+\end{frame}
+
+\begin{frame}{連続写像定理}
+
+\begin{wideitemize}	
+
+\item
+時として、標本平均の関数（例：$t$ 統計量は $\hat\mu$ と $\sigma$ の関数です）に興味を持つことがあります。
+
+\pause
+\item
+\textbf{連続写像定理（Continuous Mapping Theorem, CMT）}は、確率収束や分布収束する確率変数の連続関数について教えてくれます。
+
+\pause
+\item
+定理：$g(\cdot)$ を連続関数とします。\\
+\vspace{.2cm}
+
+もし $X_N \rightarrow_p X$ ならば、$g(X_N) \rightarrow_p g(X)$。 \\
+\vspace{.2cm}
+\pause
+
+もし $X_N \rightarrow_d X$ ならば、$g(X_N) \rightarrow_d g(X)$。\\
+\vspace{0.2cm}
+\pause{}
+
+多変量版：$\mathbf{X_N} \rightarrow_p \mathbf{X}$ ならば $g(\mathbf{X_N}) \rightarrow_p g(\mathbf{X})$、$\mathbf{X_N} \rightarrow_d \mathbf{X}$ ならば $g(\mathbf{X_N}) \rightarrow_d g(\mathbf{X})$。
+
+\end{wideitemize}
+
+\end{frame}
+
+\begin{frame}{不偏分散の収束}
+\begin{wideitemize}
+\item
+CMT の有用な応用例として、不偏分散の確率収束を示すことができます。
+
+\pause
+\item
+$\hat\sigma^2 = \frac{1}{N} \sum_{i=1}^N (Y_i - \hat\mu)^2$ を $Y_i$ の標本分散とします。
+
+\pause
+\item
+主張：$Y_1,...,Y_N$ が $iid$ であり $Var(Y_i^2)$ が有限であれば、$\hat\sigma^2 \rightarrow_p \sigma^2 = Var(Y_i)$。
+
+\pause
+\item
+証明：\\
+
+標本分散は $\hat\sigma^2 = \frac{1}{N} \sum_{i=1}^N Y_i^2 - \hat\mu^2$ と書けます。 \\ \vspace{.1cm} \pause
+
+第1項：LLN より、$ \frac{1}{N} \sum_{i=1}^N Y_i^2 \rightarrow_p E[Y_i^2]$。 \\ \vspace{.1cm} \pause
+
+第2項：LLN より、$\hat\mu \rightarrow_p \mu = E[Y_i]$。よって CMT より $\hat\mu^2 \rightarrow_p E[Y_i]^2$。\\ \vspace{.1cm} \pause
+
+したがって、再び CMT を用いると、$\frac{1}{N} \sum_{i=1}^N Y_i^2 - \hat\mu^2 \rightarrow_p E[Y_i^2] - E[Y_i]^2 = \sigma^2$。
+
+\end{wideitemize}		
+\end{frame}
+
+\begin{frame}{スルツキーの定理}
+
+\begin{wideitemize}
+
+\item
+\textbf{スルツキーの定理（Slutsky's lemma）}は、CMT の非常に有用な特殊ケースをまとめたものです。
+
+\pause
+\item
+定数 $c$ に対して $X_N \rightarrow_p c$ であり、$Y_N \rightarrow_d Y$ とします。このとき：
+
+\item
+$X_N + Y_N \rightarrow_d c + Y$ \pause
+
+\item
+$X_N Y_N \rightarrow_d c Y$ \pause
+
+\item
+もし $c \neq 0$ ならば、$Y_N/ X_N \rightarrow_d Y /c$ 
+
+\pause
+\item
+ベクトル値の確率変数についても同様の結果が成り立ちます。
+\end{wideitemize}
+	
+\end{frame}
+
+\begin{frame}{漸近的な仮説検定}
+
+\begin{wideitemize}
+\item
+$Y_i \sim \mathrm{N}(\mu,\sigma^2)$ のとき、帰無仮説 $H_0: \mu = \mu_0$ の下で $t$ 統計量 $\hat{t} = \frac{\hat\mu - \mu_0}{\sigma / \sqrt{N}} \sim  \mathrm{N}(0,1)$ となることを見ました。
+
+\pause
+\item 
+したがって、$Y_i \sim \mathrm{N}(\mu,\sigma^2)$ のときは、帰無仮説の下で $Pr(|\hat t| > 1.96) = 0.05$ でした。
+
+\pause
+\item
+ここで、$Y_i$ が正規分布に従わず、分散も未知である場合を考えましょう。
+
+\pause
+\item
+CLT より、$\sqrt{N} (\hat\mu - \mu_0) \rightarrow_d N(0,\sigma^2)$。\\
+CMT および LLN より、$\hat\sigma \rightarrow_p \sigma$。
+
+\pause
+\item
+よってスルツキーの定理より、$\hat{t} = \dfrac{\hat\mu - \mu_0}{ \hat\sigma /\sqrt{N} } \rightarrow_d N(0,1)$。
+
+\pause
+\item
+ゆえに、漸近的に $Pr( |\hat{t}| > 1.96 ) \rightarrow 0.05$ となります。$Y_i$ が非正規で $\hat\sigma$ が推定値であっても、以前と同じように仮説検定ができるのです！
+
+\end{wideitemize}	
+	
+\end{frame}
+
+\begin{frame}{漸近的な信頼区間}
+
+\begin{wideitemize}
+\item
+同様に、$Y_i$ が正規分布で $\sigma$ が既知のとき、信頼区間 $\hat\mu \pm 1.96 \sigma/\sqrt{N}$ が真の $\mu$ を含む確率は 95\% でした。
+
+\pause
+\item
+同じように、$Y_i$ が非正規で分散が未知の場合でも、$\hat\mu \pm 1.96 \hat\sigma/\sqrt{N}$ が真の $\mu$ を含む確率は、$N$ が大きくなるにつれて 95\% に近づきます。
+
+\end{wideitemize}
+	
+\end{frame}
+
+\begin{frame}{アウトライン}
+
+\textcolor{red!75!green!50!blue!25!gray}{1. 概要} $\checkmark$
+\vspace{0.8cm}
+
+\textcolor{red!75!green!50!blue!25!gray}{2. LLN, CLT, CMT} $\checkmark$
+\vspace{0.8cm}
+
+3. 漸近理論の実践への応用
+
+\end{frame}
+
+\begin{frame}{例：オレゴン健康保険実験}
+	
+\begin{center}
+\includegraphics[width = 0.9 \linewidth]{ohie-abstract}	
+\end{center}
+\end{frame}
+
+\begin{frame}{うつ病の結果に関する標本平均}
+
+\begin{tabular}{lll}
+ & 対照群（Control） & 処置群（Treated） \\
+ 平均 & 0.329 & 0.306\\
+ 標準偏差 & 0.470 &  0.461 \\
+ サンプルサイズ (N) & 10426 & 13315  
+\end{tabular}
+
+\pause
+\begin{wideitemize}
+	\item
+	対照群における母平均の信頼区間（CI）を求めたいとします。
+	\pause
+	\item
+	次のように計算できます：
+	$$\hat\mu \pm 1.96 \times \hat\sigma / \sqrt{N} = \pause{} 0.329 \pm 1.96 \times 0.470 / \sqrt{10426} =  \pause{} [0.319, 0.338] $$
+	
+	\pause
+	\item
+	処置群についてはどうでしょうか？
+	\pause
+	$$\hat\mu \pm 1.96 \times  \hat\sigma / \sqrt{N} = \pause{} 0.306 \pm 1.96 \times 0.461 / \sqrt{13315} =  \pause{} [0.298, 0.313] $$
+\end{wideitemize}
+
+\end{frame}
+
+\begin{frame}{実験における処置効果の信頼区間}
+	
+	\begin{wideitemize}
+		\item
+		以前示したように、実験における平均処置効果（ATE）は次のように与えられます：
+		
+		$$\tau = E[Y_i(1) - Y_i(0)] = E[Y_i | D_i = 1] - E[Y_i | D_i = 0]$$
+		
+		すなわち、処置群と対照群の母平均の差です。
+		\pause
+		\item
+		この処置効果について、どのように信頼区間を形成（あるいは仮説検定を）すればよいでしょうか？
+						
+	\end{wideitemize}
+	
+\end{frame}
+
+\begin{frame}{平均の差の期待値と分散}
+\begin{wideitemize}
+			\item
+			$\bar{Y}_1 = \frac{1}{N_1} \sum_{i: D_i = 1}  Y_i $ を処置群の標本平均とします。 \\
+			$\bar{Y}_0 = \frac{1}{N_0} \sum_{i: D_i = 0}  Y_i $ を対照群の標本平均とします。 
+			
+			\pause 
+			\item
+			$\bar{Y}_1, \bar{Y}_0$ はそれぞれ標本平均なので： \pause 
+			\begin{align*}
+			& E[\bar{Y}_1] = \mu_1, \hspace{2cm} Var(\bar{Y}_1) = \sigma_1^2 / N_1 \\
+			& E[\bar{Y}_0] = \mu_0, \hspace{2cm} Var(\bar{Y_0}) = \sigma_0^2 / N_0 
+			\end{align*} 
+		\noindent ここで $\mu_d = E[Y_i \mid D_i=d]$、$\sigma_d^2 = Var(Y_i \mid D_i = d)$ です。
+		
+		\
+		
+			\item
+			$\hat\tau = \bar{Y}_1 - \bar{Y}_0$ とします。すると $E[\hat\tau] = \pause{}\mu_1 - \mu_0 = \tau$ であり：
+			\begin{align*}
+			Var( \hat\tau ) &=  \pause{} \sigma_1^2 / N_1 +  \sigma_0^2 / N_0 - 2 Cov(\bar{Y_1}, \bar{Y_0})\\
+			& = \pause{}\sigma_1^2 / N_1 +  \sigma_0^2 / N_0 
+					\end{align*}
+			\noindent ここで、各サンプルが独立であるという事実から $Cov(\bar{Y_1}, \bar{Y_0}) = 0$ となります。
+\end{wideitemize}
+\end{frame}
+
+\begin{frame}
+	\begin{wideitemize}
+		\item
+		実験において次が成り立つことを示しました：
+		$$E[\hat\tau] = \tau \text{ および } Var(\hat\tau) = \sigma_1^2/N_1 + \sigma_0^2 / N_0$$
+		ここで $\hat\tau$ は処置群と対照群の標本平均の差です。
+		
+		\item
+		もし $\hat\tau$ が正規分布に従う（かつ $\sigma_1, \sigma_0$ が既知である）と分かっていれば、次のような信頼区間を構築できます： \pause
+		$$ \hat\tau \pm 1.96 \sqrt{\sigma_1^2/N_1 + \sigma_0^2 / N_0} $$
+		
+		\pause 
+		\item
+		標本平均の場合と同様に、$\hat\tau$ が正規分布に従うとは限りませんが、$N$ が大きければ\textbf{近似的に}正規分布に従うことを示すことができます。これにより、推定された条件付き分散 $\hat\sigma_d^2$ を用いて以下の信頼区間を使用できます：
+		
+		 $$ \hat\tau \pm 1.96 \sqrt{\hat\sigma_1^2/N_1 + \hat\sigma_0^2 / N_0} $$
+		 
+	\end{wideitemize}
+\end{frame}
+
+\begin{frame}{漸近正規性の証明}
+
+\begin{wideitemize}
+\item
+CLT より、$\sqrt{N_1} (\bar{Y_1} - \mu_1) \rightarrow_d \pause{} N(0,\sigma_1^2)$。 \pause
+	
+\item
+LLN より、$\frac{N_1}{N} = \frac{1}{N} \sum_i D_i \rightarrow_p \pause{} E[D_i]$。
+
+\pause
+\item
+したがって、連続写像定理を適用すると：
+\begin{align*}
+\sqrt{N}(\bar{Y}_1 - E[Y_i(1)]) &= \pause{} (1/\sqrt{N_1/N}) \cdot \sqrt{N_1} (\bar{Y}_1 - E[Y_i(1)])\\ 
+&\rightarrow_d (1/\sqrt{E[D_i]}) \cdot \mathrm{N}(0,Var(Y_i(1))) \\
+& = \mathrm{N}\left(0, \frac{1}{E[D_i]} Var(Y_i(1)) \right)
+\end{align*}
+
+\pause
+\item
+$\bar{Y}_0$ についても同様の手順を踏むことで、以下が得られます： \pause
+	$$\small \sqrt{N} \left(   \begin{array}{c}  \bar{Y}_1 - E[Y_i(1)] \\ 
+	  \bar{Y}_0 - E[Y_i(0)] 
+\end{array}  \right) \rightarrow_d \pause{} \mathrm{N}\left(0 , \left(\begin{array}{ll} \frac{1}{E[D_i]} Var(Y_i(1)) & 0 \\ 0 & \frac{1}{1-E[D_i]} Var(Y_i(0)) \end{array} \right) \right)$$
+
+\end{wideitemize}
+\end{frame}
+
+\begin{frame}{実験の仮説検定（続き）}
+\begin{wideitemize}
+	\item
+	以下を示しました：
+		$$\small \sqrt{N} \left(   \begin{array}{c}  \bar{Y}_1 - E[Y_i(1)] \\ 
+		\bar{Y}_0 - E[Y_i(0)] 
+	\end{array}  \right) \rightarrow_d \mathrm{N}\left(0 , \left(\begin{array}{ll} \frac{1}{E[D_i]} Var(Y_i(1)) & 0 \\ 0 & \frac{1}{1-E[D_i]} Var(Y_i(0)) \end{array} \right) \right)$$
+
+\pause
+\item
+CMT を適用すると：
+$$\sqrt{N} (\bar{Y}_1 -  \bar{Y_0} - E[Y_i(1) - Y_i(0)]) \rightarrow_d N(0 , \sigma^2)$$ 
+
+\noindent ここで $\sigma^2 = \frac{1}{E[D_i]} Var(Y_i(1)) + \frac{1}{1-E[D_i]} Var(Y_i(0)) $ 
+
+\pause
+
+\item
+これにより、$\tau = E[Y_i(1) - Y_i(0)]$ に対する 95\% 信頼区間を形成できます：
+
+$$\bar{Y}_1 - \bar{Y}_0 \pm  1.96 \hat\sigma / \sqrt{N}$$
+
+\noindent ここで $\hat{\sigma}^2 = \frac{N}{N_1} \hat\sigma_1^2 + \frac{N}{N_0} \hat\sigma_0^2$ であり、$\hat{\sigma}^2_d$ はグループ $d\in\{0,1\}$ の標本分散です。
+\end{wideitemize}	
+\end{frame}
+
+\begin{frame}{うつ病の結果に関する標本平均（再掲）}
+	
+	\begin{tabular}{lll}
+		& 対照群 & 処置群 \\
+		平均 & 0.329 & 0.306\\
+		標準偏差 & 0.470 &  0.461 \\
+		サンプルサイズ (N) & 10426 & 13315  
+	\end{tabular}
+	
+	\pause
+	\begin{wideitemize}
+		\item
+		処置効果の点推定値は $\hat\tau = \pause{} 0.306 - 0.329 = -0.023$ です。
+		
+		\pause
+		\item
+		処置効果の信頼区間（CI）は：
+		\pause
+		\begin{align*}
+		&\hat\tau \pm 1.96 \times \sqrt{  \frac{1}{N_1}  \hat\sigma_1^2 + \frac{1}{N_0}  \hat\sigma_0^2  } = \pause{} \\ &-0.023 \pm 1.96 \times \sqrt{ \frac{1}{13315} 0.461^2 +  \frac{1}{10426} 0.470^2 } \\ &=  \pause{} [-0.035, -0.001] 
+		\end{align*}
+		
+	\end{wideitemize}
+	
+\end{frame}
+
+\begin{frame}{非交絡性の下での仮説検定}
+\begin{wideitemizeshort}
+\item
+非交絡性 $D_i \indep (Y_i(1),Y_i(0)) | X_i$ の下では：
+{\small $$ \underbrace{E[Y_i(1) - Y_i(0) | X_i =x]}_{CATE(x)} = E[Y_i | D_i = 1, X_i =x ] - E[Y_i | D_i = 0, X_i =x]$$ }
+
+\noindent つまり、各 $X_i$ の値において実験が行われているのと同じです。
+
+\pause
+\item
+実験の場合と同じ論理により：
+
+{\small $$\sqrt{N_x} (\bar{Y}_{1,x} -  \bar{Y}_{0,x} - CATE(x)) \rightarrow_d N(0 , \sigma_x^2)$$} 
+
+\noindent ここで $N_x = |i : X_i = x|$ および 
+{\scriptsize $\sigma_x^2 = \frac{Var(Y_i(1) | X_i = x)}{E[D_i|X_i = x]} + \frac{Var(Y_i(0)|X_i =x)}{E[1-D_i|X_i=x]} $} です。
+
+\pause 
+\item
+したがって、$N_x$ が大きい場合には $CATE(x)$ についても仮説検定を行うことができます。
+
+\pause
+\item
+$CATE(x)$ を平均化することで、$ATE$ に関する推論も可能です。
+
+\end{wideitemizeshort}	
+	
+\end{frame}
+
+\begin{frame}{連続的な $x$ の課題}
+	
+\begin{wideitemize} 
+\item
+これまでは、$X_i=x$ である観測数が多い場合に $CATE(x)$ を推定する方法を示してきました。
+
+\item
+これは $X_i$ が2値（例：大学卒かどうか）であったり、少数の離散値（例：50の州）であったりする場合には非常にうまく機能します。
+
+\pause
+\item
+しかし、$X_i$ が連続量である場合はどうでしょうか？
+
+\pause
+\item
+例えば $X_i$ が所得である場合、$CATE(50,351)$ を推定するには、理論上、所得が正確に 50,351 ドルである処置群と対照群の観測値が大量に必要です。ほとんどのデータセットでは、正確にこの所得を持つ人はそれほど多くありません。
+
+\pause
+\item
+したがって、$X_i$ が連続的に分布している場合には、条件付き期待値を推定する別の方法が必要です。
+
+\pause
+\item
+コースの次のパートでは、CEF の近似として\textbf{線形回帰}を用いることで、このタスクを達成する方法に焦点を当てます。
+\end{wideitemize}	
+	
+\end{frame} 
+
+\end{document}

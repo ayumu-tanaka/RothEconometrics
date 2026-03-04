@@ -1,0 +1,919 @@
+\ifdefined\ishandout
+\documentclass[11pt,handout]{beamer}
+\else
+\documentclass[11pt]{beamer}
+\fi
+
+% 日本語対応
+\usepackage{luatexja}
+\usepackage{luatexja-fontspec}
+\renewcommand{\kanjifamilydefault}{\gtdefault}
+
+\usepackage{mathptmx}
+\renewcommand{\sfdefault}{lmss}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\PassOptionsToPackage{normalem}{ulem}
+\usepackage{ulem}
+\usepackage{caption}
+\captionsetup{labelformat=empty}
+\usepackage{bbm}
+\usepackage{upgreek}
+\setbeamertemplate{section in toc}[sections numbered]
+\makeatletter
+\usepackage{caption} 
+\captionsetup[table]{skip=10pt}
+\newcommand\makebeamertitle{\frame{\maketitle}}%
+\AtBeginDocument{%
+	\let\origtableofcontents=\tableofcontents
+	\def\tableofcontents{\@ifnextchar[{\origtableofcontents}{\gobbletableofcontents}}
+	\def\gobbletableofcontents#1{\origtableofcontents}
+}
+
+\def\Tiny{\fontsize{7pt}{8pt}\selectfont}
+\def\Normal{\fontsize{8pt}{10pt}\selectfont}
+
+\usetheme{Madrid}
+\usecolortheme{lily}
+\useinnertheme{rounded}
+
+\setbeamertemplate{footline}{\hfill\Normal{\insertframenumber/\inserttotalframenumber}}
+\setbeamertemplate{navigation symbols}{}
+
+\newenvironment{changemargin}[2]{%
+	\begin{list}{}{%
+			\setlength{\topsep}{0pt}%
+			\setlength{\leftmargin}{#1}%
+			\setlength{\rightmargin}{#2}%
+			\setlength{\listparindent}{\parindent}%
+			\setlength{\itemindent}{\parindent}%
+			\setlength{\parsep}{\parskip}% 
+		}%
+		\item[]}{\end{list}}
+
+\setbeamertemplate{footline}{\hfill\insertframenumber/\inserttotalframenumber}
+\setbeamertemplate{navigation symbols}{}
+
+\usepackage{graphicx}
+\usepackage{epsfig}
+\usepackage{bm}
+\usepackage{epsf}
+\usepackage{float}
+\usepackage[final]{pdfpages}
+\usepackage{multirow}
+\usepackage{colortbl}
+\usepackage{xkeyval}
+\usepackage{listings}
+\usepackage{ifthen}
+\usepackage{tikz}
+
+\usepackage{setspace}
+\usepackage{ragged2e}
+
+\setbeamersize{text margin left=1em,text margin right=1em} 
+
+% Table formatting
+\usepackage{booktabs}
+
+% Decimal align
+\usepackage{dcolumn}
+\newcolumntype{d}[0]{D{.}{.}{5}}
+
+\global\long\def\expec#1{\mathbb{E}\left[#1\right]}
+\global\long\def\var#1{\mathrm{Var}\left[#1\right]}
+\global\long\def\cov#1{\mathrm{Cov}\left[#1\right]}
+\global\long\def\prob#1{\mathrm{Prob}\left[#1\right]}
+\global\long\def\one{\mathbf{1}}
+\global\long\def\diag{\operatorname{diag}}
+\global\long\def\expe#1#2{\mathbb{E}_{#1}\left[#2\right]}
+\DeclareMathOperator*{\plim}{\text{plim}}
+
+\usepackage{appendixnumberbeamer}
+\renewcommand{\thefootnote}{}
+
+\setbeamertemplate{footline}
+{
+	\leavevmode%
+\hfill
+	\insertframenumber{}\hspace*{2ex}\vspace{1ex}
+}
+
+\definecolor{blue}{RGB}{0, 0, 210}
+\definecolor{red}{RGB}{170, 0, 0}
+
+\makeatother
+
+\usepackage[english]{babel}
+
+\usepackage{tikz}
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{             \node[circle,ball color=structure.fg, shade,   color=white,inner sep=1.2pt] (char) {\tiny #1};}} 
+
+\makeatletter
+\let\save@measuring@true\measuring@true
+\def\measuring@true{%
+	\save@measuring@true
+	\def\beamer@sortzero##1{\beamer@ifnextcharospec{\beamer@sortzeroread{##1}}{}}%
+	\def\beamer@sortzeroread##1<##2>{}%
+	\def\beamer@finalnospec{}%
+}
+\makeatother
+
+\setbeamersize{text margin left= .8em,text margin right=1em} 
+\newenvironment{wideitemize}{\itemize\addtolength{\itemsep}{10pt}}{\enditemize}
+\newenvironment{wideitemizeshort}{\itemize}{\enditemize}
+
+\newcommand{\indep}{\perp\!\!\!\!\perp} 
+
+\begin{document}
+	
+	%% タイトルスライド
+	\begin{frame}[noframenumbering]{}
+		\vspace{0.5cm}
+		\title[]{第4章：回帰分析入門}
+		\author{Jonathan Roth}
+		\date{数理計量経済学 I \\ ブラウン大学\\} 
+		\titlepage {\small{}\ }\thispagestyle{empty} \vspace{-30pt}
+		
+	\end{frame}
+
+	
+\begin{frame} {モチベーション}
+
+\begin{wideitemize}
+
+\item
+条件付き非交絡性の下では、処置群と対照群の結果の平均を $X_i$ で条件付けて比較することで、条件付き平均処置効果（CATE）を学べることを示しました：
+$$ CATE(x) = E[ Y_i | D_i = 1 , X_i = x ] - E[Y_i | D_i = 0 ,X_i =x ]$$ 
+
+\item
+$X_i$ が離散的で、各 $x$ の値に対して多くの観測値がある（$N_x$ が大きい）場合、中心極限定理を用いて各条件付き期待値を推定し、「推論」を行う方法を示しました。
+
+\pause
+\item
+しかし、$X_i$ が連続量である場合はどうでしょうか？
+
+\end{wideitemize}
+	
+\end{frame}	
+
+
+\begin{frame}
+\centering
+
+\only<1-7| handout:0>{\includegraphics[width = 0.8 \linewidth]{fake-sat.png}}
+\only<8| handout:0>{\includegraphics[width = 0.8 \linewidth]{fake-sat-with-trend.png}}
+\only<9| handout:1>{\includegraphics[width = 0.8 \linewidth]{fake-sat-with-trend-annotated2.png}}
+
+\begin{wideitemizeshort}
+\only<1| handout:0> {\item
+このようなデータがあるとしましょう。 }
+
+\only<2| handout:0>{
+	\item
+	SATスコアを条件とすれば、大学への進学は実質的にランダムであると仮定できるかもしれません。
+}
+
+\only<3| handout:0>{
+\item	
+$X=1350$ における CATE に興味があるとします。理論によれば、SATスコアが $X=1350$ であるブラウン大生とURI生の平均所得を比較する必要があります。
+}
+
+\only<4-5| handout:0>{
+\item
+ブラウン大については、$X=1350$ の学生が1人いるので、その人の所得で推定できます。しかし、その推定値は非常にノイズが多く、CLTも適用できません。
+}
+\smallskip
+
+\only<5| handout:0>{
+\item
+さらに、データには $X=1350$ のURI生が1人もいません！
+}
+
+\only<6-8| handout:0>{
+\item
+明らかに、他のSATスコアを持つ学生から\textbf{外挿（補外）}する必要があります。
+
+\pause\smallskip
+\item<7-8| handout:0>
+目分量でやるとしたら、どうしますか？
+
+\item<8| handout:0>\smallskip
+おそらく、点の間を縫うように線を引いて CEF を推定するでしょう！
+}
+
+\item<9| handout:1>
+これらの CEF の推定値があれば、任意の $x$ において $CATE(x)$ を推定できます。
+\end{wideitemizeshort}
+\end{frame}
+
+\begin{frame}{アウトライン}
+
+1. 母集団回帰
+\vspace{0.8cm}
+
+2. 標本回帰 (OLS)
+\vspace{0.8cm}
+
+3. 回帰分析の実践への応用
+
+\end{frame}
+
+\begin{frame}{回帰分析の導入}
+\begin{wideitemize}
+
+\item
+\textbf{回帰（regression）}の考え方は、特定の関数形式（例：線形、2次式など）を用いて、ユニット間で外挿を行うことで条件付き期待値関数（CEF）を推定するプロセスを定式化することです。
+
+\pause
+\item
+これから答えるべきいくつかの未解決の疑問があります：
+
+\pause
+\item
+手元にあるサンプルで、どのように CEF を近似すればよいでしょうか？（すなわち、どのようにデータに線を引くか！）
+
+\pause
+\item
+CEF の推定値に対して、どのように信頼区間を構築し、仮説検定を行えばよいでしょうか？
+
+\pause
+\item
+もし実際の CEF が、推定で使用した形式（例：線形）でない場合はどうなるでしょうか？
+
+\pause
+\item
+これからの数回の講義で、これらの疑問すべてに答えていきます！
+
+\end{wideitemize}	
+\end{frame}	
+
+
+\begin{frame}{ロードマップ}
+\vspace{0.2cm}
+\begin{wideitemize}
+\item \textbf{できること：} 標本平均を用いて、母平均の推定や仮説検定を行う。
+\item \textbf{したいこと：} CEF の近似を推定し、それらに関する仮説検定を行う。
+\end{wideitemize}
+\pause
+\bigskip
+「できること」を使って「したいこと」を実現するには？
+\pause
+\begin{wideitemize}
+	\item 1) CEF が特定の形式（例：線形）であると仮定する：
+	$$E[Y_i | X_i = x] = \alpha + x \beta$$
+	
+	\pause
+	\item 2) この仮定の下で、$\alpha$ と $\beta$ が母集団の期待値の関数として表現できることを示す。
+	
+	\pause
+	\item
+	3) 母平均を標本平均で推定するツールを用いて $\alpha, \beta$ を推定し、仮説検定を行う。
+	
+	\pause
+	\item
+	4) たとえ CEF の形式に関する仮定が間違っていても、パラメータ $\alpha, \beta$ が「良い」近似を提供することを議論する。
+\end{wideitemize}
+
+\end{frame}
+
+
+\begin{frame}{「最小二乗」問題}
+
+\begin{wideitemize}
+
+\item
+$X_i$ がスカラーであり、CEF が線形であるとします（これらは後で緩和します）：
+$$E[Y_i | X_i = x] = \alpha + x \beta$$
+
+\pause
+\item
+私たちが利用する有用な事実は、これが正しいとき、$(\alpha,\beta)$ は以下の「最小二乗（least squares）」問題の解になるということです：
+
+$$(\alpha,\beta)=\arg\min_{a,b} E[ (Y_i - (a + b X_i))^2  ] $$
+
+
+\pause
+\item
+これはどこから来るのでしょうか？！
+
+
+\end{wideitemize}
+	
+\end{frame}
+
+\begin{frame}{より単純な問題から始める}
+\begin{wideitemize}
+	\item
+	$(\alpha,\beta)$ が「最小二乗」問題の解であることを示すために、まず関連するより単純な問題を考えましょう：
+	
+	\pause
+	\item
+	以下を最小化する定数 $u$ を見つけたいとします：
+	$$\min_u E[ (Y_i - u)^2 ]$$
+	
+	\pause
+	\item
+	どのような定数 $u$ を選ぶべきでしょうか？ \pause 母平均 $\mu=E[Y_i]$ です！
+	
+	\pause
+	\item
+	証明： \\
+	
+	$E[ (Y_i - u)^2 ]$ を $u$ で微分すると $E[ -2(Y_i - u) ]$ です。 \\ \pause
+	
+	
+	微分を 0 と置くと：
+	$$E[ -2(Y_i - \mu) ] = 0 \Rightarrow 2 E[Y_i] = 2 u \Rightarrow u = E[Y_i].$$
+	
+\end{wideitemize}	
+\end{frame}
+
+\begin{frame}{少し難しい問題}
+\vspace{0.2cm}
+\begin{wideitemize}
+
+	\item
+	次に、以下を最小化する関数 $u(x)$ を選びたいとします：
+	$$\min_{u(\cdot)} E[ (Y_i - u(X_i))^2  ]$$
+	
+	\pause
+	\item
+	どのような関数 $u(x)$ を選ぶべきでしょうか？ \pause 条件付き期待値 $u(x) = E[Y|X= x]$ です。
+	
+	\pause
+	\item
+	証明： \\
+	反復期待値の法則より：
+	$$E[ (Y_i - u(X_i))^2  ] = E[  E[  (Y_i - u(X_i)) ^2| X_i  ]   ] .$$
+	
+	\pause
+	したがって、各 $x$ の値について、以下を最小化する $u(x)$ を選びたいわけです：
+	$$E[ (Y_i - u(x))^2 | X_i = x ].$$ 
+	
+	\pause しかし、前スライドの議論から、その解は $u(x) = E[Y_i | X_i = x]$ となります。
+\end{wideitemize}
+\end{frame}
+
+\begin{frame}{話を戻すと...}
+	
+\begin{wideitemize}
+
+\item
+関数 $u(x) = E[Y_i | X_i = x]$ が以下を最小化することを示しました：
+$$\min_{u(\cdot)} E[ (Y_i - u(X_i))^2  ]$$
+
+\pause
+\item
+したがって、もし $E[Y_i | X_i = x] = \alpha + \beta x$ ならば、$u(x) = \alpha + \beta x$ は以下を最小化します：
+$$\min_{u(\cdot)} E[ (Y_i - u(X_i))^2  ]$$
+
+\pause
+\item
+この最小化は\textit{すべての}関数 $u(\cdot)$ を対象としており、その中には $a + b x$ という形式の線形関数も含まれます。ゆえに：
+
+$$ E[ (Y_i -  (\alpha + \beta X_i)  )^2  ] \leq  E[ (Y_i -  (a + b X_i)  )^2  ]  \text{ （すべての } a ,b \text{ に対して）} $$
+
+\pause
+\item
+これは、$(\alpha,\beta)$ が以下を解決することを意味します：
+
+$$\min_{a,b}E[ (Y_i -  (a+ b X_i)  )^2  ] ,$$
+
+\noindent これで示したかったことが言えました。
+\end{wideitemize}	
+\end{frame}
+
+
+\begin{frame}{なぜこれが有用なのか}
+\begin{wideitemize}
+
+\item
+$\alpha,\beta$ が以下の解であることを示しました：
+
+$$\min_{a,b}E[ (Y_i -  (a+ b X_i)  )^2  ] .$$
+
+\item 
+これがどう役立つのでしょうか？ \pause 最小化問題を解くことで、$\alpha,\beta$ を母集団の期待値の関数として表現できるからです。
+
+\pause
+\item
+$a$ と $b$ で微分し、$(\alpha,\beta)$ において 0 と置きます： \pause
+\begin{align*}
+& E[-2  (Y_i - (\alpha + \beta X_i )) ] = 0 \\ \pause
+& E[-2  X_i (Y_i -(\alpha + \beta X_i)) ] = 0
+\end{align*}
+
+\pause
+\item
+これで 2 つの未知数に対する 2 つの方程式が得られました。これを使って CEF のパラメータ $(\alpha,\beta)$ を解くことができます。
+
+\end{wideitemize}
+\end{frame}
+
+\begin{frame}{最小二乗法の解}
+\begin{wideitemize}
+\item
+連立方程式の解は以下の通りです：
+\begin{align*}
+& \beta = \frac{E[ (X_i -E[X_i]) (Y_i - E[Y_i])  ]}{E[ (X_i - E[X_i])^2 ]} = \frac{Cov(X_i, Y_i)}{Var(X_i)} \\ 
+& \alpha = E[Y_i] - E[X_i] \beta
+\end{align*}
+
+\pause
+\item
+これらは母平均の連続関数です！
+
+\pause
+\item
+したがって、以前の講義で学んだツールを使ってこれらを推定し、CEF に関する仮説検定を行うことができます！
+\end{wideitemize}	
+\end{frame}
+
+
+\begin{frame}{ロードマップ}
+	\begin{wideitemize}
+		\item \textbf{できること：} 標本平均を用いて、母平均の推定や仮説検定を行う。
+		\item \textbf{したいこと：} CEF の近似を推定し、それらに関する仮説検定を行う。
+	\end{wideitemize}
+	\bigskip
+	「できること」を使って「したいこと」を実現するには？
+
+	\begin{wideitemize}
+		\item 1) CEF が特定の形式（例：線形）であると仮定する：
+		$$E[Y_i | X_i = x] = \alpha + x \beta \hspace{2cm }\checkmark$$
+		
+		\item 2) この仮定の下で、$\alpha$ と $\beta$ が母集団の期待値の関数として表現できることを示す。 $\checkmark$
+		
+		\item
+		3) 母平均を標本平均で推定するツールを用いて $\alpha,\beta$ を推定し、仮説検定を行う。
+		
+		\item
+		4) たとえ CEF の形式に関する仮定が間違っていても、パラメータ $\alpha,\beta$ が「良い」近似を提供することを議論する。
+	\end{wideitemize}
+	
+\end{frame}
+
+\begin{frame}{アウトライン}
+
+\textcolor{red!75!green!50!blue!25!gray}{1. 母集団回帰}$\checkmark$
+\vspace{0.8cm}
+
+2. 標本回帰 (OLS)
+\vspace{0.8cm}
+
+\textcolor{red!75!green!50!blue!25!gray}{3. 回帰分析の実践への応用}
+
+\end{frame}
+
+
+\begin{frame}{回帰係数の推定}
+	\begin{wideitemize}
+	\item
+	$E[Y_i\mid X_i=x]=\alpha+\beta x$ のとき、以下が成り立つことを示しました：
+\begin{align*}
+& \beta = \frac{E[ (X_i -E[X_i]) (Y_i - E[Y_i])  ]}{E[ (X_i - E[X_i])^2 ]} = \frac{Cov(X_i, Y_i)}{Var(X_i)} \\ 
+& \alpha = E[Y_i] - E[X_i] \beta
+\end{align*}
+	
+	\item
+	どのように $\alpha,\beta$ を推定すればよいでしょうか？ \pause \\ 母平均を標本平均に置き換えればよいのです！
+	\pause
+	\begin{align*}
+		& \hat\beta = \dfrac{ \frac{1}{N} \sum_{i=1}^{N} (X_i - \bar{X})(Y_i - \bar{Y})  }{ \frac{1}{N} \sum_{i=1}^N (X_i - \bar{X})^2 } =\frac{\widehat{Cov}(X_i,Y_i)}{\widehat{Var}(X_i)}\pause{} \\
+		& \hat\alpha = \bar{Y} - \bar{X} \hat{\beta}
+	\end{align*}
+
+	
+	\pause
+	\item
+	これらの $\hat\alpha,\hat\beta$ は\textit{最小二乗法}（Ordinary Least Squares, OLS）係数と呼ばれます。\smallskip
+\begin{itemize}
+\item これらは標本の最小化問題 $\min_{a,b}\frac{1}{N}\sum_i (Y_i -  (a+ b X_i)  )^2$ の解となります。
+\end{itemize}
+	\end{wideitemize}	
+\end{frame}
+
+
+\begin{frame}
+	\centering
+\includegraphics[width = .9\linewidth]{fake-sat-with-trend-brown-betas.png}
+\end{frame}
+
+\begin{frame}
+	\centering
+	\includegraphics[width =.9\linewidth]{fake-sat-with-trend-both-betas.png}
+	
+	\pause
+	\begin{wideitemize}
+		\item
+		$E[Y_i | D_i = 1, X_i = 1350]$ の推定値はいくらでしょうか？ \pause $\hat\alpha + \hat\beta \cdot 1350 = 34947 + 15 \cdot 1350 = 55197$ です。
+	\end{wideitemize}
+\end{frame}
+
+
+\begin{frame}{OLS の一致性}
+\begin{wideitemize}
+\item
+標本平均（の関数）に関する結果を用いて、$\hat\beta$ が $\beta$ に対して一致性を持つこと、すなわち $\hat\beta \rightarrow_p \beta$ を示すことができます。
+
+\pause
+\item
+以下が成り立ちます：
+\begin{align*}
+ \hat\beta &=\left( \frac{1}{N} \sum_{i=1}^N (X_i - \bar{X})^2 \right)^{-1}   \frac{1}{N} \sum_{i=1}^{N} (X_i - \bar{X})(Y_i - \bar{Y}) \pause{}  \\
+ &= \left( \frac{1}{N} \sum_{i=1}^N X_i^2 - \bar{X}^2 \right)^{-1}   \left( \frac{1}{N} \sum_{i=1}^{N} X_i Y_i - \bar{X} \bar{Y} \right) \pause{} \\
+ & \rightarrow_p \left( E[X_i^2] - E[X_i]^2 \right)^{-1}   \left( E[X_i Y_i] - E[X_i] E[Y_i] \right) \pause{} \\
+ &= Var(X_i)^{-1} Cov(X_i, Y_i) \pause{} = \beta
+\end{align*}
+
+
+\pause
+\item
+同様に、$\hat\alpha \rightarrow_p \alpha$ も示せます。
+\end{wideitemize}		
+\end{frame}
+
+
+\begin{frame}{OLS の漸近分布}
+	\begin{wideitemize}
+	\item
+	OLS 推定量 $\hat\alpha, \hat\beta$ は標本平均の連続関数です。
+	
+	\pause
+	\item
+	したがって、中心極限定理と連続写像定理を用いて、これらが漸近的に正規分布に従うことを示すことができます。
+	
+	\pause
+	\item
+	具体的には、以下を示します：
+	
+		$$\sqrt{N}(\hat\beta - \beta) \rightarrow_d N(0, \sigma^2),$$
+	
+	\noindent ここで
+	
+	$$\sigma^2 = \dfrac{  Var((X_i - E[X_i])\epsilon_i) }{ Var(X_i)^2  }$$ 
+	
+	
+	\pause
+	\item
+	これが有用なのは、推定された $\hat\sigma$ を用いて、$\hat\beta \pm 1.96 \hat\sigma / \sqrt{N}$ という形式で $\beta$ の信頼区間を形成できるからです。
+	
+	\end{wideitemize}	
+\end{frame}
+
+\begin{frame}{OLS の漸近分布の導出}
+\begin{wideitemize}
+
+\item
+\textbf{回帰残差（regression residual）}を $\epsilon_i = Y_i - (\alpha+X_i \beta)$ と定義します。これは次を意味します：
+\begin{equation*}
+Y_i = \alpha + X_i \beta + \epsilon_i	
+\end{equation*}
+
+\pause
+\item
+$(\alpha,\beta)$ について導出した 1 階の条件（FOC）は、この残差の期待値が 0 であり、\textbf{説明変数（regressor）}と\textbf{直交}することを意味します：$E[\epsilon_i] = E[X_i \epsilon_i] =0$
+
+\pause
+\item
+平均を取ると、$\bar{Y} = \alpha + \bar{X} \beta + \bar{\epsilon}$ となります。 \pause よって $Y_i - \bar{Y} = (X_i - \bar{X})\beta + (\epsilon_i-\bar\epsilon)$ です。
+
+\end{wideitemize}
+
+\end{frame}
+
+\begin{frame}{OLS の漸近分布（続き）}
+	\begin{wideitemize}
+		
+		\item
+		$Y_i - \bar{Y} = (X_i - \bar{X})\beta + (\epsilon_i-\bar\epsilon)$ であることが分かりました。
+		
+		\item
+		したがって：
+		\begin{align*}
+			\hat\beta &=\left( \frac{1}{N} \sum_{i=1}^N (X_i - \bar{X})^2 \right)^{-1}   \frac{1}{N} \sum_{i=1}^{N} (X_i - \bar{X})(Y_i - \bar{Y})   \\
+			&=\pause{} \left( \frac{1}{N} \sum_{i=1}^N (X_i - \bar{X})^2 \right)^{-1}   \frac{1}{N} \sum_{i=1}^{N} (X_i - \bar{X})((X_i - \bar{X})\beta + (\epsilon_i-\bar\epsilon) ) \pause{} \\
+			& =\beta + \left( \frac{1}{N} \sum_{i=1}^N (X_i - \bar{X})^2 \right)^{-1}   \frac{1}{N} \sum_{i=1}^{N} (X_i - \bar{X}) (\epsilon_i - \bar\epsilon)
+		\end{align*}
+\end{wideitemize}	
+\end{frame}
+
+\begin{frame}{OLS の漸近分布（続き）}
+\begin{wideitemize}
+	\item	ゆえに：
+	\begin{align*}
+		\sqrt{N}(\hat\beta - \beta) &= \left( \frac{1}{N} \sum_{i=1}^N (X_i - \bar{X})^2 \right)^{-1}  \sqrt{N} \frac{1}{N} \sum_{i=1}^N (X_i - \bar{X})(\epsilon_i - \bar{\epsilon}) \pause{} \\
+		&= \left( \frac{1}{N} \sum_{i=1}^N (X_i - \bar{X})^2 \right)^{-1} \sqrt{N}\frac{1}{N} \sum_{i=1}^N (X_i - E[X_i])\epsilon_i \\
+		&-\left( \frac{1}{N} \sum_{i=1}^N (X_i - \bar{X})^2 \right)^{-1}  \left( \bar{\epsilon} \sqrt{N} (\bar{X} - E[X_i]) \right)
+	\end{align*}
+
+	\item
+	LLN と CMT より、$\left( \frac{1}{N} \sum_{i=1}^N (X_i - \bar{X})^2 \right)^{-1} \rightarrow_p Var(X_i)^{-1}$ です。
+	
+	\pause
+	\item
+	CLT より、$\sqrt{N}\frac{1}{N} \sum_{i=1}^N (X_i - E[X_i])\epsilon_i \rightarrow_d \mathrm{N}(0, Var((X_i - E[X_i])\epsilon_i))$ です。
+	
+	\pause
+	\item
+	LLN, CLT および スルツキーの定理より、 $\bar{\epsilon} \sqrt{N} (\bar{X} - E[X_i]) \rightarrow_d 0 \times \mathrm{N}(0, Var(X_i))  = 0$ です。
+	
+\end{wideitemize}
+
+\end{frame}
+
+\begin{frame}{漸近理論の仕上げ (!)}
+	
+	\begin{wideitemize}
+	\item
+	これらをまとめると、以下が導かれます：
+	
+	$$\sqrt{N}(\hat\beta - \beta) \rightarrow_d N(0, \sigma^2),$$
+	
+	\noindent ここで
+	
+	$$\sigma^2 = \dfrac{  Var((X_i - E[X_i])\epsilon_i) }{ Var(X_i)^2  }$$ 
+	
+	\item
+	以前と同様に、標本平均を用いて分散 $\sigma^2$ を推定できます：
+	
+	$$\hat\sigma^2 = \dfrac{  \frac{1}{N} \sum_i ((X_i - \bar{X})\hat\epsilon_i )^2}{ \left(\frac{1}{N} \sum_i (X_i - \bar{X})^2\right)^2  }, \text{ ここで } \hat\epsilon_i = Y_i - (\hat\alpha + X_i \hat\beta)$$ 
+	
+	
+	\item
+	\pause
+	同様の手順で、$\hat\alpha$ も漸近的に正規分布に従うことを示せます。（公式は後ほど紹介します！）
+\end{wideitemize}	
+\end{frame}
+		
+		
+\begin{frame}
+	\centering
+\includegraphics[width = 0.8\linewidth]{fake-sat-with-trend-brown-betas-plus-ses.png}
+
+\pause
+
+\begin{wideitemize}
+	\item
+	$\beta$ の信頼区間は $\hat\beta \pm 1.96 \times SE \pause{} \approx [5,25]$ です。
+\end{wideitemize}
+\end{frame}		
+		
+\begin{frame}{表記と用語についての補足}
+\begin{wideitemize}
+	\item
+	しばしば、「以下の（母集団）回帰を考える」と言われることがあります：
+	\begin{equation}
+		Y_i = \alpha + \beta D_i + \epsilon_i \label{eqn: pop regression}
+	\end{equation}	
+
+	\item
+	これが意味するのは、「$(\alpha,\beta) = \arg\min_{a,b} E[ (Y_i - (a + b X_i))^2 ]$ と定義する」ということです。
+	
+	\item
+	$(\alpha,\beta)$ は「母集団回帰係数」と呼ばれます。
+	
+	\pause
+	\item
+	同様に、「方程式 (\ref{eqn: pop regression}) を OLS で推定する」という表現は、$\alpha, \beta$ の標本対応物、すなわち $\hat\alpha, \hat\beta$ を OLS で計算することを意味します。
+\end{wideitemize}
+	
+\end{frame}		
+		
+\begin{frame}{アウトライン}
+
+\textcolor{red!75!green!50!blue!25!gray}{1. 母集団回帰}$\checkmark$
+\vspace{0.8cm}
+
+\textcolor{red!75!green!50!blue!25!gray}{2. 標本回帰 (OLS)}$\checkmark$
+\vspace{0.8cm}
+
+3. 回帰分析の実践への応用
+
+\end{frame}
+		
+\begin{frame}{実験データの分析に回帰を用いる}
+	\begin{wideitemize}
+		\item 
+		実験（RCT）があるとき、平均処置効果は平均の差によって識別されることを思い出してください：
+		$$\tau = E[Y_i(1)-Y_i(0)]= E[Y_i |D_i =1] - E[Y_i | D_i =0 ]$$
+		
+		\pause
+		\item
+		ここで、次のように書けることに注目してください：
+		\begin{align*}
+		E[Y_i | D_i =d] &= E[Y_i | D_i =0] + \left( E[Y_i | D_i = 1] - E[Y_i | D_i =0]  \right) \cdot d \pause{} \\
+		&= \alpha + \beta d
+		\end{align*}
+		
+		\pause
+		\item
+		したがって、CEF $E[Y_i | D_i = d]$ は $d$ に関して線形であり、傾き係数 $\beta$ はまさに実験において ATE を識別する推定対象そのものになります！
+		
+		\pause
+		\item
+		同様に、OLS の傾き係数 $\hat\beta$ は ATE を推定する標本平均の差になります：$\hat\beta = \bar{Y}_1 - \bar{Y}_0 = \hat\tau$。
+		
+		\pause
+		\item
+		ゆえに、OLS を ATE の推定や標準誤差の算出のための便利なツールとして使うことができます。
+	\end{wideitemize}
+	
+\end{frame}		
+
+
+
+\begin{frame}{例：WorkAdvance}
+
+\begin{wideitemize}
+	
+	\item 
+	背景：大卒と非大卒の労働者の格差は、時間の経過とともに拡大しています。
+	
+	\item
+	しかし、誰もが伝統的な大学の環境で成功するわけではありません。
+	
+	\item
+	\textbf{WorkAdvance} は、高賃金の業界（IT、医療、製造など）で通用するスキルを身につけさせるための職業訓練プログラムです。
+	
+	
+	\includegraphics[width = 0.9 \linewidth]{workadvance-flow-chart}
+	
+	
+	\item
+	MDRC は、初期スクリーニングを通過した人々を対象に、訓練プログラムへの参加権をランダムに割り当てるランダム化比較試験を実施しました。
+	
+\end{wideitemize}
+\end{frame}
+
+\begin{frame}
+	\centering
+	\includegraphics[width = 0.95 \linewidth]{workadvance-site-overview}
+\end{frame}
+
+
+\begin{frame}
+\begin{wideitemize}
+	\item
+	以下の OLS 回帰を推定します：
+	
+	$$ \underbrace{Y_i}_{\text{2-3年後の所得}} = \alpha + \beta \underbrace{D_i}_{\text{処置ダミー}} + \epsilon_i $$
+	
+	\pause
+	\item
+	
+	\begin{tabular}{lrr}
+	係数 & 推定値 & 標準誤差 (SE) \\
+	$\hat\alpha$ & 14636 & 425 \\
+	$\hat\beta$ & 1965 & 609
+	\end{tabular}
+	
+	\pause
+	\item
+	推定された処置効果は？ \pause $\hat\beta = 1965$
+	
+	\item
+	処置効果の信頼区間は？ \pause $\hat\beta \pm 1.96 \times SE_{\beta} = \pause{} 1965 \pm 1.96 \times 609 \pause{}  =  [771, 3159]$
+	
+	
+	\item
+	推定された対照群の平均は？ \pause $\hat\alpha = 14636$
+	
+\end{wideitemize}	
+	
+\end{frame}
+
+
+
+\begin{frame}{ロードマップ}
+	\begin{wideitemize}
+		\item \textbf{できること：} 標本平均を用いて、母平均の推定や仮説検定を行う。
+		\item \textbf{したいこと：} CEF の近似を推定し、それらに関する仮説検定を行う。
+	\end{wideitemize}
+	\bigskip
+	「できること」を使って「したいこと」を実現するには？
+	
+	\begin{wideitemize}
+		\item 1) CEF が特定の形式（例：線形）であると仮定する：
+		$$E[Y_i | X_i = x] = \alpha + x \beta \hspace{2cm }\checkmark$$
+		
+		\item 2) この仮定の下で、$\alpha$ と $\beta$ が母集団の期待値の関数として表現できることを示す。 $\checkmark$
+		
+		\item
+		3) 母平均を標本平均で推定するツールを用いて $\alpha, \beta$ を推定し、仮説検定を行う。 $\checkmark$
+		
+		\item
+		4) たとえ CEF の形式に関する仮定が間違っていても、パラメータ $\alpha, \beta$ が「良い」近似を提供することを議論する。
+	\end{wideitemize}
+	
+\end{frame}
+
+
+
+\begin{frame}{近似としての回帰分析}
+	\begin{wideitemize}
+	\item
+	これまでは、条件付き期待値が線形であると仮定してきました：$E[Y_i | X_i = x]  = \alpha + \beta x$
+	
+	\item
+	もし真の CEF が線形でなかったらどうなるでしょうか？！
+	
+	\pause
+	\item
+	主張：CEF が線形でない場合でも、OLS は CEF に対する「最良線形近似（best linear approximation）」を与えます。
+	\pause 
+	\item
+	これが意味するのは、OLS の $\alpha,\beta$ は以下を最小化するということです：
+	 
+	 $$min_{\alpha,\beta} E[ (E[Y|X]  - (\alpha + \beta X) )^2 ]$$
+	 
+	 \pause
+	 つまり、平均二乗誤差の意味で、CEF に最も「近い」線形関数が得られるということです。
+	\end{wideitemize}
+\end{frame}
+
+
+\begin{frame}
+		
+	\begin{center}
+		\hspace{0.7cm}\includegraphics[scale=0.7]{ols1.png}
+	\end{center}
+	
+\end{frame}
+
+\begin{frame}
+	
+	\begin{center}
+		\hspace{0.7cm}\includegraphics[scale=0.7]{ols2.png}
+	\end{center}
+	
+\end{frame}
+
+\begin{frame}
+	
+	\begin{center}
+		\hspace{0.7cm}\includegraphics[scale=0.7]{ols3.png}
+	\end{center}
+	
+\end{frame}
+
+\begin{frame}
+	
+	\begin{center}
+		\hspace{0.7cm}\includegraphics[scale=0.7]{ols4.png}
+	\end{center}
+	
+\end{frame}
+
+
+
+
+
+\begin{frame}{最良近似としての OLS の証明}
+	\begin{wideitemizeshort}
+		\item 
+		$E[  (Y - (\alpha + \beta X))^2 ]$ を最小化する $\alpha,\beta$ を解きました。
+		
+		\pause
+		\item
+		$\mu(x) = E[Y|X=x]$ とします。すると： \pause
+		{\small
+		\begin{align*}
+			E[  (Y - (\alpha + \beta X))^2 ]  &= E[ (Y - \mu(X) + \mu(X) -  (\alpha + \beta X))^2   ] \pause{} \\
+			&= E[ (Y - \mu(X) )^2 ] + E[(\mu(X) -  (\alpha + \beta X))^2   ]   \\ &+ 2E[ (Y- \mu(X)) (\mu(X)- (\alpha + \beta X))  ]
+		\end{align*}
+		}
+		\pause
+		\item
+		反復期待値の法則（LIE）より：
+		{\small
+		\begin{align*}
+			&E[ (Y- \mu(X)) (\mu(X)-(\alpha + \beta X))  ] = \pause{} \\& E[  E[(Y- \mu(X)) (\mu(X)-(\alpha + \beta X)) |X ]    ] = \pause{}\\
+			&E[(\mu(X)-(\alpha + \beta X))  \underbrace{ E[Y- \mu(X) | X] }_{=0}] = 0
+		\end{align*} 
+		}
+		\item
+		ゆえに $E[  (Y - (\alpha + \beta X))^2 ] = E[ (Y - \mu(X) )^2 ] + E[(\mu(X) -  (\alpha + \beta X))^2   ] $。
+		
+		\noindent 第 1 項は $\beta$ に依存しません。したがって $E[  (Y - (\alpha + \beta X))^2 ]$ を最小化することは、$E[(\mu(X) -  (\alpha + \beta X))^2   ]$ を最小化することと同じです。
+		
+	\end{wideitemizeshort}
+\end{frame}
+
+\begin{frame}
+	\centering
+	\includegraphics[width =.75\linewidth]{fake-sat-with-trend-both-betas.png}
+	
+	\begin{wideitemizeshort}
+		\item
+		{\small $E[Y_i | D_i = 1, X_i = x]-E[Y_i | D_i = 0, X_i = x]\approx \alpha_1+\beta_1 x - (\alpha_0 +\beta_0x)$; \pause{} $\hat\alpha_1+\hat\beta_1 x - (\hat\alpha_0 +\hat\beta_0x) = (34,947+15 x)-(13,942+21 x)= 21,005-6x$\pause{} }
+		\item したがって条件付き無視可能性の下で、$ATE= E[CATE(X_i)]\approx 21,005-6E[X_i]$
+	\end{wideitemizeshort}
+\end{frame}
+
+
+		
+\end{document}

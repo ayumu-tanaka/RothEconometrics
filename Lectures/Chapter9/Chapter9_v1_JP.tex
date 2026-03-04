@@ -1,0 +1,441 @@
+\ifdefined\ishandout
+\documentclass[11pt,handout]{beamer}
+\else
+\documentclass[11pt]{beamer}
+\fi
+
+% 日本語対応
+\usepackage{luatexja}
+\usepackage{luatexja-fontspec}
+\renewcommand{\kanjifamilydefault}{\gtdefault}
+
+\usepackage{mathptmx}
+\renewcommand{\sfdefault}{lmss}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\PassOptionsToPackage{normalem}{ulem}
+\usepackage{ulem}
+\usepackage{caption}
+\captionsetup{labelformat=empty}
+\usepackage{bbm}
+\usepackage{upgreek}
+\setbeamertemplate{section in toc}[sections numbered]
+\makeatletter
+\usepackage{caption} 
+\usepackage{bm}
+\usepackage{subfig}
+\captionsetup[table]{skip=10pt}
+\usepackage{pdflscape}
+\newcommand\makebeamertitle{\frame{\maketitle}}%
+\AtBeginDocument{%
+	\let\origtableofcontents=\tableofcontents
+	\def\tableofcontents{\@ifnextchar[{\origtableofcontents}{\gobbletableofcontents}}
+	\def\gobbletableofcontents#1{\origtableofcontents}
+}
+
+\def\Tiny{\fontsize{7pt}{8pt}\selectfont}
+\def\Normal{\fontsize{8pt}{10pt}\selectfont}
+
+\usetheme{Madrid}
+\usecolortheme{lily}
+\useinnertheme{rounded}
+
+\setbeamertemplate{footline}{\hfill\Normal{\insertframenumber/\inserttotalframenumber}}
+\setbeamertemplate{navigation symbols}{}
+
+\newenvironment{changemargin}[2]{%
+	\begin{list}{}{%
+			\setlength{\topsep}{0pt}%
+			\setlength{\leftmargin}{#1}%
+			\setlength{\rightmargin}{#2}%
+			\setlength{\listparindent}{\parindent}%
+			\setlength{\itemindent}{\parindent}%
+			\setlength{\parsep}{\parskip}% 
+		}%
+		\item[]}{\end{list}}
+
+\setbeamertemplate{footline}{\hfill\insertframenumber/\inserttotalframenumber}
+\setbeamertemplate{navigation symbols}{}
+
+\usepackage{graphicx}
+\usepackage{epsfig}
+\usepackage{bm}
+\usepackage{epsf}
+\usepackage{float}
+\usepackage[final]{pdfpages}
+\usepackage{multirow}
+\usepackage{colortbl}
+\usepackage{xkeyval}
+\usepackage{listings}
+\usepackage{ifthen}
+\usepackage{tikz}
+
+\usepackage{xcolor,multirow,colortbl}
+\usepackage{verbatim}
+\usepackage{setspace}
+\usepackage{ragged2e}
+
+\setbeamersize{text margin left=1em,text margin right=1em} 
+
+% Table formatting
+\usepackage{booktabs}
+
+% Decimal align
+\usepackage{dcolumn}
+\newcolumntype{d}[0]{D{.}{.}{5}}
+
+\global\long\def\expec#1{\mathbb{E}\left[#1\right]}
+\global\long\def\var#1{\mathrm{Var}\left[#1\right]}
+\global\long\def\cov#1{\mathrm{Cov}\left[#1\right]}
+\global\long\def\prob#1{\mathrm{Prob}\left[#1\right]}
+\global\long\def\one{\mathbf{1}}
+\global\long\def\diag{\operatorname{diag}}
+\global\long\def\expe#1#2{\mathbb{E}_{#1}\left[#2\right]}
+\DeclareMathOperator*{\plim}{\text{plim}}
+
+\usepackage{appendixnumberbeamer}
+\renewcommand{\thefootnote}{}
+
+\setbeamertemplate{footline}
+{
+	\leavevmode%
+\hfill
+	\insertframenumber{}\hspace*{2ex}\vspace{1ex}
+}
+
+\makeatother
+
+\usepackage[english]{babel}
+
+\usepackage{tikz}
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{             \node[circle,ball color=structure.fg, shade,   color=white,inner sep=1.2pt] (char) {\tiny #1};}} 
+
+\makeatletter
+\let\save@measuring@true\measuring@true
+\def\measuring@true{%
+	\save@measuring@true
+	\def\beamer@sortzero##1{\beamer@ifnextcharospec{\beamer@sortzeroread{##1}}{}}%
+	\def\beamer@sortzeroread##1<##2>{}%
+	\def\beamer@finalnospec{}%
+}
+\makeatother
+
+\setbeamersize{text margin left= .8em,text margin right=1em} 
+\newenvironment{wideitemize}{\itemize\addtolength{\itemsep}{10pt}}{\enditemize}
+\newenvironment{wideitemizeshort}{\itemize}{\enditemize}
+
+\newcommand{\indep}{\perp\!\!\!\!\perp} 
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+\begin{document}
+	
+	%% タイトルスライド
+	\begin{frame}[noframenumbering]{}
+		\vspace{0.5cm}
+		\title[]{第9章：ボーナス・アプリケーション --- 追加の応用例}
+		\author{Jonathan Roth}
+		\date{数理計量経済学 I \\ ブラウン大学\\} 
+		\titlepage {\small{}\ }\thispagestyle{empty} \vspace{-30pt}
+		
+	\end{frame}
+
+
+	\begin{frame}{概要}
+		\begin{wideitemize}
+			\item
+			このスライドに到達したということは、今学期の講義が予定より少し早く進んだことを意味します。ボーナス・コンテンツの時間です！
+			
+			\item
+			このコースで学んだツールの、最近のいくつかの応用例を概観することは有益だと考えました。
+			
+			\item
+			以前よりも最近の、そしてより多様な著者による研究に焦点を当てます（Angrist や Krueger 以外の論文も紹介します！）。
+		\end{wideitemize}
+	\end{frame}	
+
+
+	\begin{frame}{少年院収容の効果}
+		\begin{wideitemize}
+			\item
+			米国は世界で最も多くの人々を収容している国です（約200万人）。
+			
+			\item
+			成人だけでなく、かなりの数の青少年（18歳未満）も収容されています（約7万人）。
+			
+			\item
+			Anna Aizer（ブラウン大学教授！）と Joseph Doyle (2015) は、少年院への収容が与える影響を研究しました。
+			
+			\item
+			具体的には、青少年期に収容されることが、 (a) 将来の犯罪活動、 (b) 教育課程の修了 にどのように影響するかを問うています。
+			
+		\end{wideitemize}
+	\end{frame}
+
+\begin{frame}{少年院への収容は、将来の犯罪や教育にどう影響すると思いますか？}
+		\begin{wideitemize}	
+			\pause
+			\item
+			収容の推進派は、青少年期の収容（通常はかなり短期間）は、非行少年の「負のスパイラル」を防ぎ、更生させる効果があると考えます。将来の犯罪を減らし、教育の修了を助ける可能性があると主張します。
+			
+			\item
+			収容の批判派は、青少年期の収容は生活を乱し、将来の雇用機会を制限すると考えます。 $\rightarrow$ 大人になった時の教育レベルの低下や犯罪の増加を招く可能性があります。
+		\end{wideitemize}
+		
+\end{frame}
+
+\begin{frame}{因果的効果の識別}
+
+\begin{wideitemize}
+	\item
+	このコースをここまで受けた皆さんなら、単に収容された少年とされなかった少年を比較してはいけない理由は明らかでしょう。なぜでしょうか？ \pause{} 交絡変数があるからです！
+	
+	\item
+	この問いに対して、より説得力のある因果的な答えを出すためのアイデアはありますか？ 
+	
+	\pause
+	\item
+	Aizer and Doyle は、シカゴにおいて、どの裁判官に割り当てられるかが実質的にランダムであることを利用しました。そして、裁判官の「寛大さ」を操作変数として用いました。
+	
+	\pause
+	\item
+	具体的には、青少年の被告人は近隣地域と犯罪の種類に基づいて「カレンダー（名簿）」に割り当てられます。各カレンダーには複数の裁判官が割り当てられており、どの裁判官になるかは特異的な要因（基本的に交互にケースを担当する）で決まります。
+\end{wideitemize}
+
+\end{frame}
+
+\begin{frame}{裁判官を用いた操作変数}
+	\begin{wideitemize}
+		\item
+		Aizer and Doyle は、割り当てられた裁判官の寛大さを操作変数として用いました。
+		
+		\item
+		寛大さは、その裁判官が担当した全被告人のうち収容された人の割合として測定されます（過学習を避けるため、当該被告人自身は除外します）。
+		
+		\pause
+		\item
+		$Y_i$ を被告人のアウトカム（例：大人になってから犯罪を犯したか、高校を卒業したか）とします。
+		
+		\item
+		$D_i$ を青少年期に収容されたかどうかの指標とします。
+		
+		\item
+		$Z_i$ を、 $i$ と同じ裁判官が担当した他の被告人の $D$ の平均値と定義します。
+	\end{wideitemize}
+\end{frame}
+
+
+\begin{frame}{仮定の評価}
+	\begin{wideitemize}
+		\item
+		\textbf{関連性} (Relevance)：\pause{} 厳しい裁判官に割り当てられた被告人ほど、収容される確率が高い必要がある。 \pause{} $\rightarrow$ 妥当に見えます。
+		
+		\item
+		\textbf{独立性} (Independence)：\pause{} どの裁判官に割り当てられるかが、大人になってからの犯罪の決定要因や収容の他の決定要因（例：犯罪の種類、弁護士の質）と独立である必要がある。 \pause{}
+			\begin{wideitemizeshort}
+				\item
+				「カレンダー」を条件とすれば、制度上の構造からして妥当に見えます。
+			\end{wideitemizeshort}
+		
+		\item
+		\textbf{除外制約} (Exclusion)： \pause 割り当てられた裁判官の厳しさは、収容されたかどうかを通じてのみ、将来のアウトカムに影響を与える。
+			\begin{itemize}
+				\item 
+				裁判官が収容の有無だけを決定するのであれば妥当です。
+				
+				\item
+				裁判官が判決の長さや保護観察の条件など、他のことも決定するのであれば懸念が生じます。
+			\end{itemize}
+		
+		\item
+		\textbf{単調性} (Monotonicity)：\pause{} 寛大な裁判官の下で収容された人は、より厳しい裁判官の下でも必ず収容される。 \pause
+			\begin{itemize}
+				\item
+				例えば、凶悪犯罪には厳しいが薬物犯罪には寛大な裁判官がいる場合などは、違反される可能性があります。
+			\end{itemize}
+	\end{wideitemize}
+\end{frame}
+
+\begin{frame}{共変量のバランス}
+	\begin{center}
+	\includegraphics[width = 0.7 \linewidth]{balance}
+	\end{center}
+裁判官の寛大さは、被告人の特徴とは相関していません。
+\end{frame}
+
+\begin{frame}{仕様（Spec）}
+	\begin{wideitemize}
+		\item
+		\textbf{第一段階：} 「カレンダー」と被告人の特徴をコントロールして、収容の有無を裁判官の厳しさに回帰する：
+		$$D_{i} =  \pi_1 Z_i + \pi_2' X_i + \delta_{c(i)} + v_i ,$$
+		
+		\noindent ここで $X_i$ は被告人の特徴のベクトル、 $\delta_{c(i)}$ は「カレンダー」固定効果です。
+		
+
+	\end{wideitemize}
+\end{frame}
+
+\begin{frame}{第一段階の結果}
+	\begin{center}
+		\includegraphics[width=0.7 \linewidth]{first-stage}
+	\end{center}
+
+\pause 
+第一段階の係数は統計的に 1 と区別できません $\rightarrow$ 1ポイント厳しい裁判官にあたると、収容される確率が 1ポイント高くなります（直感的です！）。
+\end{frame}
+
+\begin{frame}{仕様}
+	\begin{wideitemize}
+		\item
+		\textbf{第一段階：} 収容の有無を裁判官の厳しさに回帰する：
+		$$D_{i} =  \pi_1 Z_i + \pi_2' X_i + \delta_{c(i)} + v_i ,$$
+		
+		\noindent ここで $X_i$ は被告人の特徴、 $\delta_{c(i)}$ は「カレンダー」固定効果。
+
+\pause
+
+	\item
+	\textbf{第二段階：} 関心のあるアウトカム（高校卒業、将来の犯罪）を第一段階からの予測値 $\hat{D}$ に回帰する：
+	
+	$$ Y_{i} = \beta_0 + \beta_1 \hat{D}_i + \beta_2'X_i + \beta_{c(i)}+ \epsilon_i $$		
+		
+	\end{wideitemize}
+\end{frame}
+
+
+\begin{frame}
+	\begin{center}
+		\includegraphics[width = 0.9\linewidth]{iv-graduation}
+	\end{center}
+\end{frame}
+
+\begin{frame}
+	\centering
+	\includegraphics[width = 0.9\linewidth]{iv-crime}
+\end{frame}
+
+\begin{frame}{これは誰に対する処置効果か？}
+
+\pause
+\begin{wideitemize}
+	\item
+	コンプライヤーです！ 厳しい裁判官なら収容されたが、寛大な裁判官ならされなかったであろう人々です。
+	\pause
+	\item
+	したがって、この結果は「誰も収容すべきではない」と言っているわけではありません（オールウェイズ・テイカーにとっては収容が良い可能性もあります）。
+	
+	\item
+	しかし、マージナルな部分では、厳しい裁判官が寛大な裁判官のように振る舞うことで、高校卒業率が高まり、将来の犯罪が減る可能性があることを示唆しています。
+	
+	\pause
+	\item
+	ただし、この計算には「抑止効果（deterrence effects）」が含まれていないことに注意してください。つまり、少年院に行くのが怖くて犯罪を犯さない人がいる可能性は考慮されていません。
+\end{wideitemize}
+\end{frame}
+
+\begin{frame}{収容は常に犯罪を引き起こすのか？}
+\pause
+\begin{wideitemize}
+	\item
+	Bhuller et al. (2020) は、ノルウェーにおいて同様の「裁判官の厳しさ」を用いた操作変数法を用いています。
+	
+	\item
+	この研究はノルウェーで犯罪に問われた成人を対象としています。
+	
+	\item
+	ノルウェーでは、裁判官が被告人にランダムに割り当てられることが法律で義務付けられています。
+\end{wideitemize}
+
+\end{frame}
+
+\begin{frame}
+	\centering
+	\includegraphics[width = 0.9 \linewidth]{norway-iv}
+\end{frame}
+
+\begin{frame}{結果の解釈}
+	\pause
+	\begin{wideitemize}
+		\item
+		再犯率の低下は、単に「収容されている間は新しい犯罪を犯せない（incapacitation）」ことの結果であるとも考えられます。
+		
+		\pause
+		\item
+		しかし、収容された人の 90% は 1年未満の刑期です。一方で、再犯防止効果は 25〜60ヶ月間持続しています。
+		
+		\pause
+		\item
+		明らかに、刑務所は釈放された後の犯罪を防ぐための「何か」をしています。
+	\end{wideitemize}
+\end{frame}
+
+\begin{frame}{ノルウェーの刑務所は何をしているのか？}
+	\begin{center}
+		\includegraphics[width = 0.9\linewidth]{description-prison} \pause \bigskip 
+		
+		
+		\includegraphics[width = 0.9\linewidth]{description-prison-2}
+	\end{center}
+\end{frame}
+
+\begin{frame}
+	\centering
+	\includegraphics[width = 0.9 \linewidth]{prison-pic}
+\end{frame}
+
+
+\begin{frame}
+	\centering
+	\includegraphics[width = 0.9\linewidth]{job-training}
+\end{frame}
+
+\begin{frame}
+	\centering
+	\includegraphics[width = 0.9\linewidth]{incarceration-by-attachment}
+\end{frame}
+
+\begin{frame}{まとめ}
+	\begin{wideitemize}
+		\item
+		ノルウェーの刑務所は（米国とは対照的に）更生と職業訓練に重点を置いています。
+		
+		\item
+		これは、もともと無職だった人々の労働市場におけるアウトカムにプラスの影響を与えているようです。
+		
+		\item
+		一方で、もともと職があった人については、生活基盤が崩れる「分断効果（disruption effect）」が職業訓練の効果を上回る可能性があります。
+	\end{wideitemize}
+\end{frame}
+
+\begin{frame}{判定員（Examiner）デザイン}
+	\begin{wideitemize}
+		\item
+		「判定員（試験官）」がケースを審査し、関心のある決定を下すような他の文脈でも、同様のリサーチデザインが用いられています。
+		
+		\item
+		いくつか他の例を紹介します。
+	\end{wideitemize}
+\end{frame}
+
+\begin{frame}
+	\centering
+	\includegraphics[width = 0.9 \linewidth]{bankruptcy-iv}
+\end{frame}
+
+
+\begin{frame}
+	\centering
+	\includegraphics[width = 0.9 \linewidth]{foster-care-1}
+	\includegraphics[width = 0.9 \linewidth]{foster-care-2}
+\end{frame}
+
+\begin{frame}
+	\centering
+	\includegraphics[width= 0.9 \linewidth]{eviction}
+\end{frame}
+
+\end{document}

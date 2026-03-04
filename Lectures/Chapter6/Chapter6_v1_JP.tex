@@ -1,0 +1,926 @@
+\ifdefined\ishandout
+\documentclass[11pt,handout]{beamer}
+\else
+\documentclass[11pt]{beamer}
+\fi
+
+% 日本語対応
+\usepackage{luatexja}
+\usepackage{luatexja-fontspec}
+\renewcommand{\kanjifamilydefault}{\gtdefault}
+
+\usepackage{mathptmx}
+\renewcommand{\sfdefault}{lmss}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{xcolor,multirow,colortbl}
+\PassOptionsToPackage{normalem}{ulem}
+\usepackage{ulem}
+\usepackage{caption}
+\captionsetup{labelformat=empty}
+\usepackage{bbm}
+\usepackage{upgreek}
+\setbeamertemplate{section in toc}[sections numbered]
+\makeatletter
+\usepackage{caption} 
+\usepackage{bm}
+\usepackage{subfig}
+\captionsetup[table]{skip=10pt}
+\newcommand\makebeamertitle{\frame{\maketitle}}%
+\AtBeginDocument{%
+	\let\origtableofcontents=\tableofcontents
+	\def\tableofcontents{\@ifnextchar[{\origtableofcontents}{\gobbletableofcontents}}
+	\def\gobbletableofcontents#1{\origtableofcontents}
+}
+
+\def\Tiny{\fontsize{7pt}{8pt}\selectfont}
+\def\Normal{\fontsize{8pt}{10pt}\selectfont}
+
+\usetheme{Madrid}
+\usecolortheme{lily}
+\useinnertheme{rounded}
+
+\setbeamertemplate{footline}{\hfill\Normal{\insertframenumber/\inserttotalframenumber}}
+\setbeamertemplate{navigation symbols}{}
+
+\newenvironment{changemargin}[2]{%
+	\begin{list}{}{%
+			\setlength{\topsep}{0pt}%
+			\setlength{\leftmargin}{#1}%
+			\setlength{\rightmargin}{#2}%
+			\setlength{\listparindent}{\parindent}%
+			\setlength{\itemindent}{\parindent}%
+			\setlength{\parsep}{\parskip}% 
+		}%
+		\item[]}{\end{list}}
+
+\setbeamertemplate{footline}{\hfill\insertframenumber/\inserttotalframenumber}
+\setbeamertemplate{navigation symbols}{}
+
+\usepackage{graphicx}
+\usepackage{epsfig}
+\usepackage{bm}
+\usepackage{epsf}
+\usepackage{float}
+\usepackage[final]{pdfpages}
+\usepackage{multirow}
+\usepackage{colortbl}
+\usepackage{xkeyval}
+\usepackage{listings}
+\usepackage{ifthen}
+\usepackage{tikz}
+
+\usepackage{setspace}
+\usepackage{ragged2e}
+
+\setbeamersize{text margin left=1em,text margin right=1em} 
+
+% Table formatting
+\usepackage{booktabs}
+
+% Decimal align
+\usepackage{dcolumn}
+\newcolumntype{d}[0]{D{.}{.}{5}}
+
+\global\long\def\expec#1{\mathbb{E}\left[#1\right]}
+\global\long\def\var#1{\mathrm{Var}\left[#1\right]}
+\global\long\def\cov#1{\mathrm{Cov}\left[#1\right]}
+\global\long\def\prob#1{\mathrm{Prob}\left[#1\right]}
+\global\long\def\one{\mathbf{1}}
+\global\long\def\diag{\operatorname{diag}}
+\global\long\def\expe#1#2{\mathbb{E}_{#1}\left[#2\right]}
+\DeclareMathOperator*{\plim}{\text{plim}}
+
+\usepackage{appendixnumberbeamer}
+\renewcommand{\thefootnote}{}
+
+\setbeamertemplate{footline}
+{
+	\leavevmode%
+\hfill
+	\insertframenumber{}\hspace*{2ex}\vspace{1ex}
+}
+
+% \definecolor{blue}{RGB}{0, 0, 210}
+% \definecolor{red}{RGB}{170, 0, 0}
+
+\makeatother
+
+\usepackage[english]{babel}
+
+\usepackage{tikz}
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{             \node[circle,ball color=structure.fg, shade,   color=white,inner sep=1.2pt] (char) {\tiny #1};}} 
+
+\makeatletter
+\let\save@measuring@true\measuring@true
+\def\measuring@true{%
+	\save@measuring@true
+	\def\beamer@sortzero##1{\beamer@ifnextcharospec{\beamer@sortzeroread{##1}}{}}%
+	\def\beamer@sortzeroread##1<##2>{}%
+	\def\beamer@finalnospec{}%
+}
+\makeatother
+
+\setbeamersize{text margin left= .8em,text margin right=1em} 
+\newenvironment{wideitemize}{\itemize\addtolength{\itemsep}{10pt}}{\enditemize}
+\newenvironment{wideitemizeshort}{\itemize}{\enditemize}
+
+\newcommand{\indep}{\perp\!\!\!\!\perp} 
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+\begin{document}
+	
+	%% タイトルスライド
+	\begin{frame}[noframenumbering]{}
+		\vspace{0.5cm}
+		\title[]{第6章：パネルデータと差の差分析}
+		\author{Jonathan Roth}
+		\date{数理計量経済学 I \\ ブラウン大学\\} 
+		\titlepage {\small{}\ }\thispagestyle{empty} \vspace{-30pt}
+		
+	\end{frame}
+
+	
+	\begin{frame}{モチベーション}
+		
+		\begin{wideitemize}
+			\item
+			これまで、観察可能な特徴を条件として、処置がランダムに割り当てられていると見なせる（条件付き非交絡性）場合に、因果的効果を推定する方法を見てきました。
+			
+			\item
+			しかし、適切に考慮できていない観察不可能な特徴（すなわち、交絡変数）が存在することを懸念することがよくあります。
+			
+			\pause
+			\item
+			次に、\textbf{パネルデータ}がある場合に、特定の種類の観察されない交絡因子にどのように対処できるかを考えます。
+
+			
+		\end{wideitemize}
+
+	\end{frame}
+
+\begin{frame}{パネルデータとは何か？}
+	\begin{wideitemize}
+	\item
+	パネルデータとは、各ユニット $i$（個人や州など）について、複数の期間 $t$ にわたって観測値が得られる状況を指します。
+	
+	\pause
+	\item
+	なぜこれが有用なのでしょうか？ これにより、処置が発生する\textit{前}の、処置群と対照群のアウトカムの差を調べることができるからです。
+	
+	\pause
+	\item
+	もし処置前に処置群と対照群のアウトカムが異なっていれば、それは交絡因子の結果であるはずです。
+	
+	\pause
+	\item
+	したがって、処置前の差を利用して交絡因子について学び、それらを調整できる可能性があります。
+	
+	\pause
+	\item
+	応用マイクロ経済学の研究で最も一般的に使用されるパネルデータ手法である、\textbf{差の差分析}（difference-in-differences, DID）の例で、これがどのように機能するかを見てみましょう。
+	\end{wideitemize}
+
+\end{frame}	
+
+
+
+\begin{frame}{Hastings (2004)}
+\begin{wideitemize}
+	\item
+	2004年、Justine Hastings（ブラウン大学の元教授です！）は、ガソリン業界の合併がガソリン価格にどのように影響するかを分析した研究を発表しました。
+	
+	\pause
+	\item
+	特に彼女は、精製業者である ARCO が、最大手ガソリンスタンドの1つである Thrifty を買収したカリフォルニアでの事例を研究しました。
+	
+	\pause
+	\item
+	このような合併は価格にどのような影響を与えると思いますか？ 
+	\pause
+		\begin{itemize}
+			\item 
+			一方で、競争が減少し、価格が上昇する可能性があります。
+			\item
+			他方で、合併によってガソリン供給のコストが削減され、価格が下落する可能性もあります（シナジー効果）。
+		\end{itemize}
+
+	
+	\pause
+	\item
+	Hastings は、カリフォルニア州の近隣地域別のガソリン価格データを用いて、この問いに実証的に答えようとしました。
+		\begin{itemize}
+			\item
+			データには、Thrifty スタンドがある地域とない地域の両方の情報が含まれています。
+		\end{itemize}	
+	 
+\end{wideitemize}
+	
+\end{frame}
+	
+	
+\begin{frame}
+	\begin{wideitemize}
+		\item 
+		まず、合併後のガソリン価格データしか手に入らないと仮定しましょう。
+		
+		\item
+		以前に Thrifty があった地域 ($D_i = 1$) と、以前に Thrifty がなかった地域 ($D_i=0$) の価格を比較することで、Thrifty の転換による因果的効果を推定できるかもしれません。
+		
+		\pause
+		\item
+		なぜこれが Thrifty 転換の因果的効果を与えない可能性があるのでしょうか？ \pause 欠落変数です！
+		
+		\pause
+		\item
+		特に、以前から Thrifty があった場所は、なかった場所よりも競争が激しかった可能性があります。そのため、もともと価格が低いことが予想されます。
+		
+		\pause
+		\item
+		パネルデータがあれば、合併前の価格を見ることで、これを実証的にテストできます！
+	\end{wideitemize}
+\end{frame}	
+
+
+\begin{frame}
+	\includegraphics[width=0.7\linewidth]{hastings-event-study-pre}
+	\begin{wideitemize}
+		\item
+		合併前、Thrifty と競合していた市場のスタンドは、どの期間においてもガソリン価格が約 3 セント低かったことがわかります。
+		
+		\pause
+		\item
+		合併後の非交絡性を仮定するのは妥当でしょうか？ \pause いいえ！
+		
+		\pause
+		\item
+		より妥当な仮定は、もし合併がなければ、その 3 セントの差が維持されていたであろう、というものです！ \pause{} これが\textbf{差の差分析}の考え方です。
+	\end{wideitemize}
+\end{frame}
+
+\begin{frame}
+	\includegraphics[width=0.7\linewidth]{hastings-event-study}
+
+	\begin{wideitemize}
+		\item
+		合併後、Thrifty があった地域のスタンドは価格が約 2 セント\textit{高く}なりました。
+		
+		\pause
+		\item
+		もし（合併前のように）価格が 3 セント\textit{低かった}はずだと仮定すると、処置効果は \pause{} $2 - (-3) = 5$ セントとなります。
+		
+		\pause
+		\item
+		これは、処置後の処置群と対照群の差 (2) から、処置前の差 (-3) を引いたもの、すなわち「\textit{差の差}」です。
+	\end{wideitemize}
+
+\end{frame}
+
+\begin{frame}{DID の仮定の定式化}
+\begin{wideitemize}
+	\item
+	2期間 $t = 1,2$ を考えます。処置群 ($D_i=1$) は期間 2 で処置を受け、対照群は一度も処置を受けません。
+	
+	\item
+	ユニット $i$ の期間 $t$ における観測されるアウトカムを $Y_{it}$ とします。\\ 
+	$Y_{it} = D_{i} Y_{it}(1) + (1-D_i)Y_{it}(0)$ と仮定します。
+	
+	\pause
+	\item
+	\textbf{事前反応なしの仮定} (No anticipation)： $Y_{i1}(0) = Y_{i1}(1)$
+		\begin{itemize}
+			\item 
+			期間 2 での処置が、期間 1 のアウトカムに影響を与えないという仮定です。
+		\end{itemize}	
+	\item
+	\textbf{並行トレンド仮定} (Parallel trends)：
+	$$ \underbrace{E[  Y_{i2}(0) - Y_{i1}(0) | D_i = 1 ] }_{\text{処置群の $Y(0)$ の変化}} = \underbrace{E[  Y_{i2}(0) - Y_{i1}(0) | D_i = 0 ] }_{\text{対照群の $Y(0)$ の変化}} $$
+	
+	\pause
+	同値な表現として：
+	$$\scriptsize \underbrace{E[  Y_{i2}(0) | D_i = 1 ] - E[Y_{i2}(0) | D_i =0] }_{\text{期間 2 における選択バイアス}} = \underbrace{E[  Y_{i1}(0) | D_i = 1 ] - E[Y_{i1}(0) | D_i =0] }_{\text{期間 1 における選択バイアス}} $$
+\end{wideitemize}	
+\end{frame}
+
+\begin{frame}
+\begin{wideitemize}
+	\item 
+	これらの仮定の下で、以下が成り立ちます：
+	\begin{align*}
+	& \underbrace{E[Y_{i2} - Y_{i1} | D_i = 1 ]}_{\text{処置群の観測された変化}} - \underbrace{E[Y_{i2} - Y_{i1} | D_i = 0 ]}_{\text{対照群の観測された変化}} = \\
+	&= E[Y_{i2}(1) - Y_{i1}(1) | D_i = 1 ] - E[Y_{i2}(0) - Y_{i1}(0) | D_i = 0 ] \text{ \scriptsize (観測データ規則) } \pause{}\\
+	&= E[Y_{i2}(1) - Y_{i1}(0) | D_i = 1 ] - E[Y_{i2}(0) - Y_{i1}(0) | D_i = 0 ] \text{ \scriptsize (事前反応なし) } \pause{} \\
+	&  = E[Y_{i2}(1) - Y_{i2}(0) | D_i = 1] + \\&  E[Y_{i2}(0) - Y_{i1}(0) | D_i = 1 ] - E[Y_{i2}(0) - Y_{i1}(0) | D_i = 0 ]  \text{\scriptsize  (項の加減) } \pause{}\\
+	&= E[Y_{i2}(1) - Y_{i2}(0) | D_i = 1] \text{ \scriptsize(並行トレンド) }
+	\end{align*}
+
+	\pause
+	\item
+	したがって、標本平均の「差の差」は $\tau_{ATT} = E[Y_{i2}(1)- Y_{i2}(0) | D_i = 1]$ を識別します。
+	
+	\item
+	これは\textbf{処置群における平均処置効果} (Average Treatment Effect on the Treated, ATT) と呼ばれます。\\
+	処置群の、期間 2 における平均的な効果です。
+	
+\end{wideitemize}
+\end{frame}
+	
+	
+\begin{frame}{ATT の推定}
+	\begin{wideitemize}
+		\item
+		DID の仮定（並行トレンドと事前反応なし）の下で、ATT は次のように識別されることを示しました：
+		$$ \tau_{ATT} = \underbrace{E[Y_{i2} - Y_{i1} | D_i = 1 ]}_{\text{処置群の母平均の変化}} - \underbrace{E[Y_{i2} - Y_{i1} | D_i = 0 ]}_{\text{対照群の母平均の変化}}  $$
+		
+		\item
+		これをどう推定すればよいでしょうか？ \pause{} 標本平均を代入すればよいのです！
+		
+		\pause
+		\item
+		推定値は： 
+		$$\hat\tau_{ATT} = \underbrace{\bar{Y}_{12} - \bar{Y}_{11} }_{\text{処置群の標本平均の変化}} - \underbrace{\bar{Y}_{02} - \bar{Y}_{01}}_{\text{対照群の標本平均の変化}} , $$
+		
+		\noindent ここで $\bar{Y}_{dt}$ は、期間 $t$ における処置ステータス $D_i = d$ のユニットの標本平均です。
+		
+	\end{wideitemize}
+\end{frame}	
+
+\begin{frame}{例題}
+	\begin{wideitemizeshort}
+		\item 
+		Hastings の例で、6月（期間 1）と10月を比較してみましょう。
+	\end{wideitemizeshort}
+	\centering
+	\includegraphics[width =.4\linewidth]{hastings-event-study-w-labels}
+
+\pause
+		{\scriptsize \[ \hat\tau_{ATT} =  \underbrace{\bar{Y}_{12} - \bar{Y}_{11} }_{\text{処置群の変化}} - \underbrace{\bar{Y}_{02} - \bar{Y}_{01}}_{\text{対照群の変化}} = (1.43 - 1.25) - (1.41 - 1.28) = 0.05 \]}
+
+\end{frame}
+
+
+
+\begin{frame}{回帰としての DID}
+	\begin{itemize}
+		\item 
+		以下の回帰を考えます：
+		$$Y_{it} = \beta_0 + \beta_1 \times Post_t + \beta_2 D_i + \beta_3 D_i \times Post_t + \epsilon_{it},$$
+		\noindent ここで $Post_t = 1[t=2]$ です。
+		
+		\pause
+		\item
+		主張：DID の仮定の下で、母集団回帰係数 $\beta_3$ は $\tau_{ATT}$ に等しくなります。
+		
+		\pause
+		\item
+		なぜでしょうか？ 上記の回帰は CEF を次のようにモデル化しています：
+		\begin{align*}
+			& E[Y_{it} | D_i = 0, Post_t = 0 ]  = \pause{}  \beta_0 \pause{} \\
+			& E[Y_{it} | D_i = 0, Post_t = 1 ] = \pause{}  \beta_0 + \beta_1 \pause{} \\ 
+			& E[Y_{it} | D_i = 1, Post_t = 0 ] = \pause{}  \beta_0 + \beta_2 \pause{} \\
+			& E[Y_{it} | D_i = 1, Post_t = 1 ] = \pause{}  \beta_0 + \beta_1 + \beta_2 + \beta_3
+		\end{align*}
+	
+	\pause
+	\item
+	したがって、 
+	\begin{align*}
+	\beta_3 = &(E[Y_{it} | D_i = 1, Post_t = 1 ] - E[Y_{it} | D_i = 1, Post_t = 0 ]) - \\ &(E[Y_{it} | D_i = 0, Post_t = 1 ] - E[Y_{it} | D_i = 0, Post_t = 0 ]) = \tau_{ATT}		
+	\end{align*}
+
+\pause
+\item 同様に、 $\hat\beta_3 = (\bar{Y}_{12} -\bar{Y}_{11}) - (\bar{Y}_{02} -\bar{Y}_{01}) = \hat\tau_{ATT}$ となります。
+
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{例題}
+
+\begin{center}
+\includegraphics[width = 0.5\linewidth]{hastings-event-study-w-labels}
+\end{center}
+\begin{wideitemize}
+
+
+\item
+Hastings のデータの6月と10月の部分を使い、
+$$Y_{it} = \beta_0 + \beta_1 \times Post_t + \beta_2 D_i + \beta_3 D_i \times Post_t + \epsilon_{it},$$
+\noindent を OLS で推定するとします（ $Post_t$ は10月なら 1、6月なら 0）。 
+
+\pause
+\item
+以下の回帰係数が得られます：
+\begin{tabular}{lr}
+定数項 ($\hat\beta_0$) & 1.28 \\
+Post ($\hat\beta_1$) & 0.13 \\
+処置群ダミー ($\hat\beta_2$) & -0.03 \\
+処置群 $\times$ Post ($\hat\beta_3$) & 0.05
+\end{tabular}
+\end{wideitemize}	
+\end{frame}
+
+
+\begin{frame}{多期間における DID}
+	
+	\begin{wideitemize}
+		\item
+		DID 分析において、3期間以上存在することがよくあります。\pause{}
+		
+		\item
+		これは主に2つの理由で有用です： \pause{}
+		
+		\begin{enumerate}
+			\item 
+			処置\textit{前}に並行トレンドが成り立っているように見えるかをテストできます。\pause{}
+			
+			\pause
+			\item
+			時間の経過とともに ATT がどのように変化するかを分析できます。\pause{}
+		\end{enumerate}
+
+
+		\item
+		これをどのように行うのでしょうか？ 
+
+	\end{wideitemize}
+\end{frame}
+
+
+\begin{frame}{多期間における DID}
+	\begin{wideitemize}
+		\item
+		期間が $t=-\underline{T},...,\bar{T}$ まであり、処置群が期間 1 から処置を受け始めるとします。
+		
+		\pause
+		\item
+		$s \neq 0$ である各期間について、期間 $s$ と期間 0 の間の 2期間 DID を推定できます：
+		
+		$$\hat\beta_s = \underbrace{(\bar{Y}_{1s} - \bar{Y}_{0s})}_{\text{期間 $s$ における差}} -  \underbrace{(\bar{Y}_{10} - \bar{Y}_{00})}_{\text{期間 0 における差}} $$
+		
+		\noindent ここで $\bar{Y}_{dt}$ は、期間 $t$ における処置グループ $d$ の平均です。
+		
+		\pause
+		\item
+		便利なことに、これらの $\hat\beta_s$ は以下の回帰の OLS 推定値と等しくなります：
+		
+		$$Y_{it} =  \phi_{t} + D_i \gamma + \sum_{s\neq 0}  D_i \times 1[t = s] \times  \beta_s   + \epsilon_{it} $$
+		
+		\pause
+		\item
+		$D_i \gamma$ をユニット固定効果 $\lambda_i$ に置き換えても、全く同じ $\hat\beta_s$ が得られます。 
+		\end{wideitemize}
+\end{frame}
+
+\begin{frame}{例：Medicaid（公的医療保険）の拡大}
+	
+	\begin{wideitemize}
+		\item
+		医療費負担適正化法（ACA、通称オバマケア）は、連邦貧困線の 138\% までの所得の人々に Medicaid の対象を拡大しました。
+		
+		\item
+		Medicaid の拡大は 2014 年に施行されました。しかし、いくつかの共和党寄りの州は拡大を拒否しました。
+		
+		\item
+		2015年までに、24 州が Medicaid を拡大しました（その後、さらに多くの州が拡大しています）。
+		
+		\pause
+		\item
+		Carey, Miller, and Wherry (2020) は、早期導入州と非導入州を比較する DID デザインを用いて、Medicaid 拡大の影響を研究しています。
+				
+		
+	\end{wideitemize}
+	
+\end{frame}
+
+\begin{frame}{例：Medicaid の拡大}
+	\begin{wideitemizeshort}
+		\item
+		彼らの回帰式を簡略化したものは以下の通りです：
+		
+		{\small $$Y_{its} =  \phi_{t} + \lambda_s + \sum_{r\neq -1}  D_i \times 1[t = 2014 + r] \times  \beta_r   + \epsilon_{it} $$}
+		
+		\noindent {\footnotesize $Y_{its}$ は州 $s$ 年 $t$ の個人 $i$ の結果、$D_i = 1$ は拡大州。 $\beta_s$ の推定値と 95\% 信頼区間：}
+	
+	\pause
+	\begin{center}
+		\includegraphics[width = 0.45 \linewidth]{carey-event-study}
+	\end{center}
+	
+	\pause
+		\item
+		{\footnotesize 処置前は同様のトレンド（「プレトレンド」）ですが、処置後は負の効果が見られます。}
+	\end{wideitemizeshort}
+
+\end{frame}
+
+
+\begin{frame}
+関連する論文で、同じ著者の一部が同様のリサーチデザインを用いて、死亡率への影響を推定しています。
+\begin{center}
+\includegraphics[width = 0.7\linewidth]{medicaid-mortality}
+\end{center}
+\end{frame}
+
+
+\begin{frame}{並行トレンドに関する注意点}
+	
+	\begin{wideitemize}
+		\item
+		DID は並行トレンド仮定に依存しています。これは選択バイアスを許容しますが、それが時間を通じて一定であることを要求します。 \pause これは、時間とともに変化する交絡因子の存在を排除しています。
+		
+		\pause
+		\item
+		私たちはしばしば、時間とともに変化する交絡因子を懸念します。例えば、マクロ経済的要因が民主党支持州と共和党支持州に異なる影響を与えるかもしれません。		 
+		
+		\pause
+		\item
+		処置前の差（「プレトレンド」）をテストすることは、リサーチデザインに対する信頼を高めるのに役立ちます。 \pause しかし、それは完璧ではありません。なぜでしょうか？ 
+		
+		\begin{enumerate}
+			\item 
+			以前にトレンドが並行だったからといって、その後も並行であり続けたとは限らないからです。
+			
+			\pause
+			\item
+			多くの場合、プレトレンドの推定値にはノイズが含まれるため、本当に 0 なのかどうか確信が持てないからです。
+		\end{enumerate}
+	\end{wideitemize}
+
+\end{frame}
+
+\begin{frame}
+\begin{wideitemizeshort}
+	\item
+	{\scriptsize プレトレンドの点推定値だけでなく、信頼区間（CI）が何を排除できているかも重要です。}
+	
+	\pause
+	\item
+	{\scriptsize プロットが説得力を持つかの目安は、全 CI を通る滑らかな線が引けるかです。}
+\end{wideitemizeshort}
+
+\pause
+\begin{onlyenv}<+>
+\centering
+\includegraphics[width = 0.45 \linewidth]{HeAndWang-base}
+\begin{wideitemizeshort}
+	\item
+	{\scriptsize ここで効果があるという説得力はありますか？}
+\end{wideitemizeshort}
+\end{onlyenv}
+
+\begin{onlyenv}<+>
+	\centering
+	\includegraphics[width = 0.45 \linewidth]{HeAndWang-RedTrend}
+	\begin{wideitemizeshort}
+		\item
+		{\scriptsize 説得力はどうでしょうか？ おそらく、それほどでもないでしょう！}
+	\end{wideitemizeshort}
+\end{onlyenv}
+
+
+\begin{onlyenv}<+>
+	\centering
+	\includegraphics[width = 0.2 \linewidth]{medicaid-eligibility}
+	\begin{wideitemizeshort}
+		\item
+		{\scriptsize こちらはどうですか？ }
+	\end{wideitemizeshort}
+\end{onlyenv}
+
+
+\begin{onlyenv}<+>
+	\centering
+	\includegraphics[width = 0.4 \linewidth]{medicaid-mortality}
+	\begin{wideitemizeshort}
+		\item
+		{\scriptsize そしてこちらは？  }
+	\end{wideitemizeshort}
+\end{onlyenv}
+
+\end{frame}
+
+\begin{frame}{パネル回帰の標準誤差}
+\begin{wideitemize}
+	\item
+	$(Y_i,\bm{X}_i)$ が $iid$ に抽出されている場合、以下の OLS 推定値の標準誤差を求める方法は既に知っています：
+	
+	$$Y_i = \bm{X}_i'\bm{\beta} + e_i$$
+	
+	\pause
+	\item
+	今は以下のような式を扱っています：
+	
+		$$Y_{it} = \bm{X}_{it}'\bm{\beta} + e_{it}$$
+		
+	\pause
+	\item
+	$(Y_{it}, \bm{X}_{it})$ が $i$ と $t$ を通じて $iid$ であると仮定するのは妥当でしょうか？ \pause{} いいえ。
+	
+	\pause
+	\begin{enumerate}
+		\item 
+		$Y_{i1}$ と $Y_{i2}$ は相関していることが予想されます。例えば、2010 年に高所得だった人は、2011 年も高所得である傾向があります。これは\textbf{系列相関}（serial autocorrelation）と呼ばれます。
+		
+		\pause
+		\item
+		さらに微妙な点として、処置が州レベルで割り当てられている場合、特定の州のすべての人は同じ $D_{it}$ の値を持ちます（これは $\bm{X}_{it}$ に含まれます）。
+	\end{enumerate}
+
+
+\end{wideitemize}
+\end{frame}
+
+\begin{frame}{クラスター標準誤差}
+	{\small \color{black}
+	\begin{wideitemizeshort}
+		\item 
+		\textbf{クラスター標準誤差}は、同じ「クラスター」内の観測値間の相関を許容するように OLS 分散公式を拡張したものです。
+		
+		\pause
+		\item
+		仮定：各クラスターは独立にサンプリングされている。
+		
+		\pause
+		\item
+		例：個人レベル ($i$) でクラスター化する場合、 $Y_{i1}$ と $Y_{i2}$ の依存は許容し、 $(Y_{i1},Y_{i2})$ と $(Y_{j1},Y_{j2})$ は $j\neq i$ で独立。
+		
+		\pause
+		\item
+		パネル分析では最低でも個人レベルでクラスター化すべきです。処置が集計レベルで割り当てられているなら、そのレベルでクラスター化します。
+		
+		\pause
+		\item
+		注意：中心極限定理に用いられる「実効的観測数」はクラスター数です。
+			\begin{itemize}
+				\item 
+				クラスター数が非常に少ない（例：20 未満）場合は信頼できません。
+			\end{itemize}	
+	\end{wideitemizeshort}
+	}
+\end{frame}
+
+\begin{frame}{XKCD}
+	\centering
+	\includegraphics[width=0.9\linewidth]{xkcd}
+\end{frame}
+
+\begin{frame}{クラスター標準誤差の実装}
+	\begin{itemize}
+		\item 
+		Stata でのクラスター標準誤差の実装は非常に簡単です。
+		
+		\item
+		以下を：
+		
+		\begin{quote}
+			reg y x, robust
+		\end{quote}
+	
+		\noindent 次のように置き換えるだけです： \\
+		
+			\begin{quote}
+			reg y x, cluster(clustervar)
+		\end{quote}
+		
+	\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+		\includegraphics[width = 0.7 \linewidth]{beer-tax1}
+	\medskip 
+		\includegraphics[width = 0.7 \linewidth]{beer-tax2}
+	
+\end{frame}
+
+\begin{frame}
+	\centering
+	\includegraphics[width = 0.7\linewidth]{bdm04}
+\end{frame}
+
+
+\begin{frame}{非常に有名な DID}
+	\begin{wideitemize}
+		\item
+		Card and Krueger (1994) は、最低賃金が雇用にどのように影響するかを問いました。
+		
+		\pause
+		\item
+		ミクロ経済学の理論で学んだことに基づけば、最低賃金の上昇は雇用にどう影響すると予想しますか？
+		
+		\pause
+			\begin{itemize}
+				\item 
+				完全競争市場では、賃金（労働の価格）の下限設定は需要の減少を招くはずです。
+			\end{itemize}
+		
+		\pause
+		\item
+		これを研究するため、CK は 1992 年にニュージャージー州が最低賃金を 4.25 ドルから 5.05 ドルに引き上げた事例を調査しました。
+		
+		\pause
+		\item
+		彼らは、ニュージャージー州のファストフード店の雇用の変化を、最低賃金が 4.25 ドルのままだった隣接するペンシルベニア州の変化と比較する DID を用いました。
+	\end{wideitemize}
+\end{frame}
+
+
+\begin{frame}
+	\begin{center}
+			\includegraphics[width = 0.7\linewidth]{CK_table}
+	\end{center}
+	\pause
+	\begin{wideitemize}
+		\item
+		点推定値は 2.76 フルタイム当量（FTE）の雇用\textit{増加}を示唆していますが、統計的に有意ではありませんでした。
+	\end{wideitemize}
+\end{frame}
+
+\begin{frame}{なぜ？！}
+	\begin{wideitemize}
+		\item
+		最低賃金の引き上げが雇用を減少させないように見えるという結果は、当時非常に驚き（かつ物議を醸すもの）でした。
+		
+		\pause
+		\item 
+		この発見の一つの説明は、労働市場が\textit{完全競争的ではない}というものです。むしろ、企業は\textit{雇い主独占}（monopsonistic）的です。
+		
+		\pause
+		\begin{wideitemize}
+			\item
+			時給 7 ドルで 100 人の労働者を雇っている企業を考えます。
+			
+			\item
+			もう一人雇うと 10 ドルの追加利益が出るとします。しかし、そのためには賃金を時給 8 ドルに上げる必要があるとしましょう。
+			
+			\pause
+			\item
+			企業は賃金を 8 ドルに上げるべきでしょうか？ \pause もし既存の 100 人全員に 1 ドル追加で払わなければならないなら、そうはしないでしょう！
+			
+			\pause
+			\item
+			しかし、もし最低賃金が 8 ドルに引き上げられれば、企業はどのみち最初の 100 人に 8 ドルを払わなければなりません。すると、追加の利益をもたらす 101 人目を 8 ドルで雇うことは理にかなうようになります。
+		\end{wideitemize}
+	\end{wideitemize}
+\end{frame}
+
+
+\begin{frame}
+\includegraphics[width = 0.7 \linewidth]{ck_pretrends}	
+	
+\begin{wideitemize}
+	\item
+	現代の基準で見れば、CK の分析はそれほど説得力があるとは言えないかもしれません。
+	
+	\pause
+	\item
+	1992 年 4 月の政策変更の前から、2 つの州は正確に並行して動いてはいません。 \pause
+	また、対象が 2 つの州だけです！
+\end{wideitemize}
+\end{frame}	
+
+\begin{frame}{処置タイミングのずれ}
+	\begin{wideitemize}
+		\item
+		次に、最低賃金に関するより現代的な証拠を紹介します。
+		
+		\item
+		その前に、処置のタイミングが分散している（staggered）設定、例えば州によって異なる年に最低賃金が導入される場合について DID を議論する必要があります。
+		
+		\pause
+		\item
+		約 5 年前までは、人々は以下のような OLS 回帰を実行することで、分散した設定に DID を拡張していました：
+		$$Y_{it} = \phi_i + \lambda_t + D_{it} \beta + e_{it}$$
+		
+		\noindent ここで $D_{it} = 1$ は、ユニット $i$ が期間 $t$ で処置を受けていることを示します。
+		
+		\pause
+		\item
+		2期間モデルでは、これは処置群と対照群の標本平均の差の差に対応します。
+		
+		\pause
+		\item 
+		残念ながら、タイミングが分散している場合、この推定量は処置群と未処置群の間の DID の平均には\textit{ならない}ことが判明しました。
+			\begin{itemize}
+				\item 
+				Borusyak and Jaravel (2016), de Chaisemartin and D'Haultfoeuille (2020), Goodman-Bacon (2021) を参照してください。
+			\end{itemize}
+	\end{wideitemize}
+\end{frame}
+
+\begin{frame}
+	\begin{wideitemize}
+		\item
+		ここ数年、これらの回帰の問題を「修正」するための多くの研究が行われてきました。
+		
+		\item
+		解決策は通常、手作業で「クリーンな比較」を行うことです。
+		
+		\pause
+		\begin{enumerate}
+			\item 
+			年 $g$ で初めて処置を受けたユニットについて、その期間中に処置を受けなかったユニットと比較して、 $g-1$ と $g+k$ の間のアウトカムの変化を比較します。
+			
+			\pause
+			\item
+			これは、コホート $g$ における処置 $k$ 年後の効果の推定値となります。
+			
+			\pause
+			\item
+			これをすべての $g$ について行い、それらを合計して平均的な効果を求めます。
+		\end{enumerate}
+
+		\pause
+		\item 
+		このアプローチや関連する手法には、Callaway and Sant'Anna (2020), Sun and Abraham (2020), Borusyak, Jaravel \& Spiess (2021) など、多くの実装があります。	
+	\end{wideitemize}
+\end{frame}
+
+\begin{frame}
+	\begin{wideitemize}
+		\item
+		Cengiz et al (2019) は、1976 年から 2016 年の間の 138 件の最低賃金変更を用いて、C\&K の現代版を行いました。
+		
+		\pause
+		\item
+		最低賃金を変更した各州について、前後 4 年間に最低賃金を変更しなかった州を「対照群」として抽出しました。
+		
+		\pause
+		\item
+		彼らは、処置州と一致した対照州との間で DID を計算しました。
+		
+		\pause
+		\item
+		そして、これらの DID の加重平均をとることで、全体的な平均効果を算出しました。
+	\end{wideitemize}
+\end{frame}
+
+
+\begin{frame}
+	\includegraphics[width =0.9 \linewidth]{cengiz_eventstudy}
+\end{frame}
+
+
+\begin{frame}
+	\includegraphics[width =0.9 \linewidth]{cengiz_eventstudy2}
+\end{frame}
+
+\begin{frame}
+	\includegraphics[width =0.9 \linewidth]{cengiz_eventstudy3}
+\end{frame}
+
+
+\begin{frame}{重要な考慮事項と注意点}
+	\begin{wideitemize}
+		\item
+		歴史的な最低賃金の変更は、かなり緩やかなものでした。
+			\begin{itemize}
+				\item 
+				最低賃金を 4.25 ドルから 5.05 ドルに上げた変化が、 7.25 ドルから 15 ドルへの引き上げについて示唆的であるかは不明です！
+			\end{itemize}
+		
+		\pause
+		\item
+		最低賃金の歴史的分析は、通常比較的短期的なものです。
+			\begin{itemize}
+				\item 
+				長期的なスパンでは、最低賃金の上昇は、労働者を代替するような技術へのシフトを促すかもしれません。
+			\end{itemize}
+		
+		\pause
+		\item
+		最低賃金が雇用を減少させるかどうかについては、経済学者の間でも依然として議論があります！
+	\end{wideitemize}
+\end{frame}
+
+
+\begin{frame}{その他のパネルデータ手法}
+	\begin{wideitemize}
+		\item 
+		ここでは、応用マイクロ経済学で最も一般的に使用されるパネルデータ手法である DID に焦点を当てました。
+		
+		\item
+		しかし、他にも多くの手法があります：
+		
+		\begin{itemize}
+			\item 
+			ラグ付き依存変数のコントロール
+			
+			\item
+			合成コントロール法 (Synthetic control)
+			
+			\item
+			行列補完 (Matrix completion)
+		\end{itemize}
+	
+		\item
+		これらをカバーする時間はありませんが、興味がある方は、さらに計量経済学の授業を履修することをお勧めします :) 
+	\end{wideitemize}
+\end{frame}
+
+\end{document}
