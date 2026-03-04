@@ -1,0 +1,564 @@
+\ifdefined\ishandout
+\documentclass[11pt,handout]{beamer}
+\else
+\documentclass[11pt]{beamer}
+\fi
+
+% 日本語対応
+\usepackage{luatexja}
+\usepackage{luatexja-fontspec}
+\renewcommand{\kanjifamilydefault}{\gtdefault}
+
+\usepackage{mathptmx}
+\renewcommand{\sfdefault}{lmss}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\PassOptionsToPackage{normalem}{ulem}
+\usepackage{ulem}
+\usepackage{caption}
+\captionsetup{labelformat=empty}
+\usepackage{bbm}
+\usepackage{upgreek}
+\setbeamertemplate{section in toc}[sections numbered]
+\makeatletter
+\usepackage{caption} 
+\usepackage{bm}
+\usepackage{subfig}
+\captionsetup[table]{skip=10pt}
+\usepackage{pdflscape}
+\newcommand\makebeamertitle{\frame{\maketitle}}%
+\AtBeginDocument{%
+	\let\origtableofcontents=\tableofcontents
+	\def\tableofcontents{\@ifnextchar[{\origtableofcontents}{\gobbletableofcontents}}
+	\def\gobbletableofcontents#1{\origtableofcontents}
+}
+
+\def\Tiny{\fontsize{7pt}{8pt}\selectfont}
+\def\Normal{\fontsize{8pt}{10pt}\selectfont}
+
+\usetheme{Madrid}
+\usecolortheme{lily}
+\useinnertheme{rounded}
+
+\setbeamertemplate{footline}{\hfill\Normal{\insertframenumber/\inserttotalframenumber}}
+\setbeamertemplate{navigation symbols}{}
+
+\newenvironment{changemargin}[2]{%
+	\begin{list}{}{%
+			\setlength{\topsep}{0pt}%
+			\setlength{\leftmargin}{#1}%
+			\setlength{\rightmargin}{#2}%
+			\setlength{\listparindent}{\parindent}%
+			\setlength{\itemindent}{\parindent}%
+			\setlength{\parsep}{\parskip}% 
+		}%
+		\item[]}{\end{list}}
+
+\setbeamertemplate{footline}{\hfill\insertframenumber/\inserttotalframenumber}
+\setbeamertemplate{navigation symbols}{}
+
+\usepackage{graphicx}
+\usepackage{epsfig}
+\usepackage{bm}
+\usepackage{epsf}
+\usepackage{float}
+\usepackage[final]{pdfpages}
+\usepackage{multirow}
+\usepackage{colortbl}
+\usepackage{xkeyval}
+\usepackage{listings}
+\usepackage{ifthen}
+\usepackage{tikz}
+
+\usepackage{xcolor,multirow,colortbl}
+\usepackage{verbatim}
+\usepackage{setspace}
+\usepackage{ragged2e}
+
+\setbeamersize{text margin left=1em,text margin right=1em} 
+
+% Table formatting
+\usepackage{booktabs}
+
+% Decimal align
+\usepackage{dcolumn}
+\newcolumntype{d}[0]{D{.}{.}{5}}
+
+\global\long\def\expec#1{\mathbb{E}\left[#1\right]}
+\global\long\def\var#1{\mathrm{Var}\left[#1\right]}
+\global\long\def\cov#1{\mathrm{Cov}\left[#1\right]}
+\global\long\def\prob#1{\mathrm{Prob}\left[#1\right]}
+\global\long\def\one{\mathbf{1}}
+\global\long\def\diag{\operatorname{diag}}
+\global\long\def\expe#1#2{\mathbb{E}_{#1}\left[#2\right]}
+\DeclareMathOperator*{\plim}{\text{plim}}
+
+\usepackage{appendixnumberbeamer}
+\renewcommand{\thefootnote}{}
+
+\setbeamertemplate{footline}
+{
+	\leavevmode%
+\hfill
+	\insertframenumber{}\hspace*{2ex}\vspace{1ex}
+}
+
+\definecolor{blue}{RGB}{0, 0, 210}
+\definecolor{red}{RGB}{170, 0, 0}
+
+\makeatother
+
+\usepackage[english]{babel}
+
+\usepackage{tikz}
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{             \node[circle,ball color=structure.fg, shade,   color=white,inner sep=1.2pt] (char) {\tiny #1};}} 
+
+\makeatletter
+\let\save@measuring@true\measuring@true
+\def\measuring@true{%
+	\save@measuring@true
+	\def\beamer@sortzero##1{\beamer@ifnextcharospec{\beamer@sortzeroread{##1}}{}}%
+	\def\beamer@sortzeroread##1<##2>{}%
+	\def\beamer@finalnospec{}%
+}
+\makeatother
+
+\setbeamersize{text margin left= .8em,text margin right=1em} 
+\newenvironment{wideitemize}{\itemize\addtolength{\itemsep}{10pt}}{\enditemize}
+\newenvironment{wideitemizeshort}{\itemize}{\enditemize}
+
+\newcommand{\indep}{\perp\!\!\!\!\perp} 
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+\begin{document}
+	
+	%% タイトルスライド
+	\begin{frame}[noframenumbering]{}
+		\vspace{0.5cm}
+		\title[]{復習セッション}
+		\author{Jonathan Roth}
+		\date{数理計量経済学 I \\ ブラウン大学\\} 
+		\titlepage {\small{}\ }\thispagestyle{empty} \vspace{-30pt}
+		
+	\end{frame}
+
+
+\begin{frame}{概要}
+	\begin{enumerate}
+		\item 
+		期末試験の構成と運営について
+		\vspace{0.5cm}
+		\item
+		講義の主要な概念
+		\vspace{0.5cm}
+		\item
+		質疑応答
+	\end{enumerate}
+\end{frame}
+	
+	
+\begin{frame}{期末試験の構成}
+	\begin{wideitemize}
+		\item
+		構成は昨年の期末試験と同様です。
+		
+		\item
+		このコースで学んだ数学的ツールを使用する分析的な問題が1〜2問出題されます。
+		
+		\item
+		新しい実証研究の応用例に関する問題が出題されます。因果的効果を学ぶための仮定を述べ、評価し、実証結果についてコメントすることが求められます。
+		
+	\end{wideitemize}
+\end{frame}	
+
+
+\begin{frame}{期末試験の運営について}
+	\begin{wideitemize}
+		
+		\item
+		試験は対面形式で、時間は2時間です。
+			\begin{wideitemize}
+				\item
+				追加時間の延長などの合理的配慮（SAS accommodation）が必要な場合は、私とTAにメールをしてください。
+			\end{wideitemize}
+		
+		\item
+		日時は12月15日午後2時、場所は MacMillan Hall 117 です。
+		
+		\item
+		A4サイズ（8.5x11インチ）2枚のメモ（自筆・印刷不問）を持ち込むことができます。
+			\begin{itemize}
+				\item 
+				例：中間試験用の「チートシート」に加えて、新しいものを1枚。
+			\end{itemize}
+		
+	\end{wideitemize}
+\end{frame}
+
+\begin{frame}{コースの概要}
+	\begin{wideitemizeshort}
+		\item
+		このクラスでは、主にデータを用いて経済学的な\underline{因果的}な問いにどのように答えるかに焦点を当てました。
+			\begin{itemize}
+				\item
+				ブラウン大学とURIのどちらに進学するかが、所得に与える影響は？ 
+				
+				\item
+				健康保険への加入が、うつ病に与える影響は？ 
+				
+				\item
+				最低賃金が雇用に与える影響は？
+			\end{itemize}
+		
+		\pause
+		\item
+		因果制の効果の考え方を、\textit{潜在的結果}（potential outcomes）を用いて定式化しました。
+			\begin{itemize}
+				\item 
+				各ユニットは、処置を受けた場合と受けなかった場合の両方の潜在的結果 $Y_i(1)$ と $Y_i(0)$ を持ちます。
+				
+				\item
+				例： $Y_i(1) =$ ブラウン大に行った場合の所得、 $Y_i(0) =$ URIに行った場合の所得。
+				
+				\item
+				観測できるのは、処置群については $Y_i(1)$、対照群については $Y_i(0)$ のみです。
+				
+				\item
+				関心があるのは、因果的効果 $Y_i(1) - Y_i(0)$ （またはその母集団平均）です。
+			\end{itemize}
+	\end{wideitemizeshort}
+\end{frame}
+
+\begin{frame}{2つの主要な課題}
+
+データで因果的な問いに答えるには、2つの主要な課題があります： \medskip 
+	
+	\begin{wideitemize}
+		\item
+		各ユニットについて、反実仮想的な結果（counterfactual outcome）を観察することは決してできません。
+			\begin{itemize}
+				\item
+				例：ブラウン大生については所得 ($Y_i(1)$) を観察できますが、もし彼らがURIに行っていた場合の所得 ($Y_i(0)$) は分かりません。
+			\end{itemize} 
+		
+		\item
+		通常、私たちが関心を持つ母集団全体ではなく、そのサンプル（標本）のデータしか観察できません。
+		\begin{itemize}
+			\item
+			例：最近の卒業生の一部の調査データしか持っていません。
+		\end{itemize}
+	\end{wideitemize}
+
+\end{frame}
+
+\begin{frame}{識別 vs 統計的推論}
+
+通常、これら2つの問題を分けて考えます： \medskip	
+	
+	\pause 
+	
+	\begin{wideitemize}
+		\item
+		\textbf{識別（Identification）：} もし母集団全体の観察可能なデータが手に入るとしたら、因果的効果について何を学ぶことができるか？ 
+		\pause
+			\begin{wideitemize}
+				\item
+				通常、処置がどのように割り当てられるかについての仮定から始めます。
+				
+				\item
+				それらの仮定の下で、因果的効果が観察可能な母集団平均の関数であることを示します。
+			\end{wideitemize}
+		\pause
+		\item
+		\textbf{統計的推論（Statistical Inference）：} サンプルが与えられたとき、母集団の観察可能な特徴について何を学ぶことができるか？ \pause
+			\begin{wideitemize}
+				\item
+				通常、母集団平均を標本平均で推定（代入）します。
+				
+				\item
+				条件付き平均を推定する必要があるときは、回帰を用いて条件付き期待値関数（CEF）を近似します。
+				
+				\item
+				統計的ツールを用いて、仮説検定を行ったり信頼区間を構築したりします。
+			\end{wideitemize}		
+	\end{wideitemize}
+\end{frame}
+
+\begin{frame}{5種類の識別論拠}
+	\begin{wideitemize}
+		\item
+		\textbf{実験（Experiments）：} 処置がランダム化されていれば、処置群と対照群の結果を直接比較できます。
+		
+		\pause
+		\item
+		\textbf{条件付き非交絡性（Conditional unconfoundedness）：} 観察可能な特徴を条件とすれば処置の割り当てが実験のようであると仮定し、同じ共変量を持つ処置群と対照群を比較します。
+		
+		\pause
+		\item
+		\textbf{差の差分析（Difference-in-differences）：} 処置への選択を許容しますが、選択バイアスが時間を通じて一定であると仮定し、処置前後の変化の差を比較します。
+		
+		\pause
+		\item
+		\textbf{操作変数法（Instrumental variables）：} 操作変数の割り当てがランダムであり、処置を通じてのみ結果に影響を与えると仮定し、操作変数の値が異なる集団間を比較します。
+		
+		\pause
+		\item
+		\textbf{回帰不連続デザイン（Regression discontinuity）：} カットオフの周囲で交絡因子が連続的に変化すると仮定し、スコアがカットオフの直下の人々と直上の人々を比較します。
+	\end{wideitemize}	
+\end{frame}
+
+\begin{frame}{実験}
+
+うつ病に関する標本平均
+\begin{tabular}{lll}
+	& 対照群 & 処置群 \\
+	平均 & 0.329 & 0.306\\
+	標準偏差 (SD) & 0.470 &  0.461 \\
+	サンプルサイズ (N) & 10426 & 13315  
+\end{tabular}
+
+
+\begin{wideitemize}
+	\item
+	識別： \pause{}$D_i \indep (Y_i(1),Y_i(0))  \implies ATE = E[Y_i | D_i =1 ] - E[Y_i | D_i = 0]$ \\ \medskip これをどのように導出するか確認しておいてください！
+	
+	\pause
+	\item
+	推定：母平均を標本平均に置き換えます！
+	
+	\pause
+	\item
+	推定（その2）：OLS でも推定可能です。
+	$$Y_i = \alpha + \beta D_i + \epsilon_i$$
+\end{wideitemize}
+	
+\end{frame}
+
+
+\begin{frame}{条件付き非交絡性}
+	\begin{wideitemize}
+		\item
+		例：どの大学に行くかは、合格した大学のセットを条件とすれば実質的にランダムかもしれません（Dale \& Krueger）。
+		
+		\pause
+		\item
+		識別： $D_i \indep (Y_i(1),Y_i(0)) | X_i  \implies CATE(x) = E[Y_i | D_i =1 , X_i = x] - E[Y_i | D_i = 0, X_i = x]$ 
+		
+		\pause
+		\item
+		推定：通常、CEF を近似する必要があります $\rightarrow$ OLS を使用します！
+		
+		\item
+		以下の OLS 推定値を用いて ATE を近似するのが一般的です：
+		
+		$$Y_i = \alpha + \beta D_i + \bm{\gamma}' \bm{X_i} + \epsilon_i$$
+		
+		\pause
+		\item
+		これは、(i) 条件付き非交絡性が成り立ち、かつ (ii) CEF が近似的に線形、すなわち $E[Y_i | D_i, \bm{X}_i] \approx \alpha + \beta D_i + \bm{\gamma}' \bm{X_i} $ である場合にうまく機能します。
+	\end{wideitemize}	
+\end{frame}
+
+\begin{frame}
+	\centering
+	\includegraphics[width = 0.5\linewidth]{dk-results-table-reg2}
+\end{frame}
+
+\begin{frame}{差の差分析 I}
+	\centering
+	\includegraphics[width = 0.65\linewidth]{../Chapter6/hastings-event-study-w-labels}
+	
+	\begin{wideitemize}
+		\item
+		主要な識別仮定：並行トレンド --- 選択バイアスが時間を通じて一定であること（形式的な定義を確認しておいてください）。
+		
+		\pause
+		\item
+		識別：並行トレンド（および事前反応なし）の下で、 $\tau_{ATT} = \underbrace{(\mu_{12} - \mu_{11})}_{\text{処置群の変化}} - \underbrace{ (\mu_{02} - \mu_{01}) }_{\text{対照群の変化}}$
+	
+		\pause	
+		\item
+		推定：母平均の代わりに標本平均を代入します！
+		
+		\pause
+		\item
+		推定（その2）：OLS でも推定可能です（方法を確認しておいてください！）。
+	\end{wideitemize}
+\end{frame}
+
+\begin{frame}{差の差分析 II}
+	\begin{wideitemize}
+		\item
+		DID の仮定の妥当性を評価するために、「イベントスタディ」を用いて処置前のトレンドを確認するのが一般的です。
+		
+		\centering
+		\includegraphics[width = 0.5\linewidth]{../Chapter6/medicaid-eligibility}
+		
+		\item
+		(i) プレトレンドが 0 に近く、かつ (ii) すべての信頼区間（CI）を通る直線が引けない（トレンドに変化がある）場合に、リサーチデザインに対する信頼が高まります。
+		
+		\pause
+		\item
+		イベントスタディの推定も OLS で行えます。
+	\end{wideitemize}
+\end{frame}
+
+\begin{frame}{操作変数法 (IV)}
+	\centering
+	\includegraphics[width = 0.6\linewidth]{../Chapter7/ak-first-stage-basic}
+	
+	\begin{wideitemize}
+		\item
+		IV では、実質的にランダムに割り当てられ、処置への影響を通じてのみ結果に影響を与える「操作変数」を用います。
+		
+		\item
+		4つの主要な識別仮定（これらを理解しておいてください！）：
+		\begin{wideitemizeshort}
+			\item
+			独立性：操作変数は実質的にランダムに割り当てられている。
+			
+			\item
+			除外制約：操作変数は処置を通じてのみ結果に影響を与える。
+			
+			\item
+			単調性：ディファイアーが存在しない。
+			
+			\item
+			関連性：操作変数が処置ステータスに影響を与える。
+		\end{wideitemizeshort}	
+		 
+		
+		\pause
+		\item
+		これら4つの仮定の下で、 $\beta_{IV} = \frac{ E[Y_i | Z_i = 1] - E[Y_i | Z_i = 0] }{E[D_i | Z_i = 1] - E[D_i | Z_i = 0]}$ は LATE（コンプライヤーにおける平均処置効果）を識別します。
+	\end{wideitemize}
+\end{frame}
+
+\begin{frame}{操作変数法 --- 推定}
+	\centering
+	\includegraphics[width = 0.6\linewidth]{../Chapter7/ak-first-stage-basic}
+
+	\begin{wideitemize}
+		\item
+		これら4つの仮定の下で、 $\beta_{IV} = \frac{ E[Y_i | Z_i = 1] - E[Y_i | Z_i = 0] }{E[D_i | Z_i = 1] - E[D_i | Z_i = 0]}$ は LATE を識別します。
+		
+		\item
+		推定は、誘導型と第一段階に標本対応物を代入し、その比をとることで行われます。
+		
+		\pause
+		\item
+		推定（その2）：「二段階最小二乗法（2SLS）」でも実行可能です。これにより複数の操作変数を取り込むことができます（方法を確認しておいてください）。
+			\begin{wideitemize}
+				\item
+				$D_i$ を操作変数 $Z_i$ （およびコントロール変数）に回帰する。
+				
+				\item
+				$Y_i$ をその予測値 $\hat{D}_i$ （およびコントロール変数）に回帰する。
+			\end{wideitemize}
+	\end{wideitemize}
+	
+\end{frame}
+
+\begin{frame}{回帰不連続デザイン (RDD)}
+	\centering
+	\includegraphics[width = 0.6 \linewidth]{../Chapter8/bleemer-rf}
+	
+	\begin{wideitemize}
+		\item
+		RDD では、処置ステータスを（部分的に）決定するしきい値の直上と直下の人々を比較します。
+		
+		\pause
+		\item
+		識別：潜在的結果がカットオフにおいて連続であること。
+			\begin{itemize}
+				\item 
+				これがどのような場合に満たされないか（操作など）を理解しておいてください！
+			\end{itemize}
+		
+		\pause
+		\item
+		推定：OLS または局所線形回帰を用いて、カットオフにおける CEF を推定します。
+			\begin{wideitemize}
+				\item
+				注意：局所線形回帰の詳細については試験には出しません。
+			\end{wideitemize}
+	\end{wideitemize}
+\end{frame}
+
+
+\begin{frame}{おわりに I}
+この1学期で多くのことを学びました！ \medskip
+
+\begin{wideitemize}
+	\item
+	因果的効果を推定することの難しさを学びました。
+	
+	\item
+	いつ、どのように因果的効果について学べるかを考えるための統計的な言語を習得しました。
+	
+	\item
+	因果的効果を学ぶための、いくつかの実践的な「識別戦略」を学びました。
+	
+	\item
+	有限のサンプルにおいて（多くの場合、回帰を用いて）因果的効果を推定し、仮説検定を行うためのツールを習得しました。
+\end{wideitemize}
+
+\pause
+\medskip
+さらに深く学びたい方は、他にも多くのクラスがあります！
+	\begin{itemize}
+		\item 
+		ノンパラメトリック手法、機械学習アプローチ、ベイズ計量経済学、時系列分析と予測、など。
+	\end{itemize}
+
+\end{frame}
+
+\begin{frame}{おわりに II}
+これらのツールを、今後さまざまな形で応用してほしいと願っています： \medskip
+
+\begin{wideitemize}
+	\item
+	政策や企業の意思決定を改善し、社会福祉（あるいは企業の利益 --- お好みで！）を向上させるための研究を行う。
+	
+		\begin{itemize}
+			\item 
+			学術研究に興味があるなら、ブラウン大の教授のリサーチ・アシスタント（RA）をしたり、卒業論文を書いたりすることをお勧めします。
+		\end{itemize}
+	
+	\item
+	新聞やオンラインの記事などを読む際に、実証的な証拠をより深く理解する。
+	
+	\item
+	計量経済学者になって、将来のより良い政策分析のためのツールを開発する :-) 
+	
+	
+\end{wideitemize}
+
+	
+\end{frame}
+
+
+\begin{frame}{おわりに III}
+	\begin{wideitemize}
+		\item
+		コース評価（フィードバック・フォーム）への記入をお願いします： \href{https://brown.evaluationkit.com  }{\underline{https://brown.evaluationkit.com}}
+		
+		\item
+		皆さんからのフィードバックは、評価のためだけでなく、今後のコース改善のために活用されます！
+		
+		\item
+		私がこのコースを教えるのは3回目ですが、何がうまくいき、何が改善できるかについてのコメントをいただければ幸いです。ありがとうございました！
+	\end{wideitemize}
+\end{frame}
+
+\begin{frame}
+	\centering
+	\includegraphics[width = 0.9 \linewidth]{poppy-good-luck}
+\end{frame}
+
+\end{document}
