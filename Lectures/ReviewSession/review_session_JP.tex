@@ -217,7 +217,7 @@
 		
 		\pause
 		\item
-		因果制の効果の考え方を、\textit{潜在的結果}（potential outcomes）を用いて定式化しました。
+		因果的効果の考え方を、\textit{潜在的結果}（potential outcomes）を用いて定式化しました。
 			\begin{itemize}
 				\item 
 				各ユニットは、処置を受けた場合と受けなかった場合の両方の潜在的結果 $Y_i(1)$ と $Y_i(0)$ を持ちます。
@@ -238,9 +238,9 @@
 
 データで因果的な問いに答えるには、2つの主要な課題があります： \medskip 
 	
-	\begin{wideitemize}
+	\begin{wideitemizeshort}
 		\item
-		各ユニットについて、反実仮想的な結果（counterfactual outcome）を観察することは決してできません。
+		各ユニットについて、反実仮想的な結果を観察することは決してできません。
 			\begin{itemize}
 				\item
 				例：ブラウン大生については所得 ($Y_i(1)$) を観察できますが、もし彼らがURIに行っていた場合の所得 ($Y_i(0)$) は分かりません。
@@ -252,7 +252,7 @@
 			\item
 			例：最近の卒業生の一部の調査データしか持っていません。
 		\end{itemize}
-	\end{wideitemize}
+	\end{wideitemizeshort}
 
 \end{frame}
 
@@ -371,15 +371,15 @@
 
 \begin{frame}{差の差分析 I}
 	\centering
-	\includegraphics[width = 0.65\linewidth]{../Chapter6/hastings-event-study-w-labels}
+	\includegraphics[width = 0.55\linewidth]{../Chapter6/hastings-event-study-w-labels}
 	
-	\begin{wideitemize}
+	\begin{wideitemizeshort}
 		\item
 		主要な識別仮定：並行トレンド --- 選択バイアスが時間を通じて一定であること（形式的な定義を確認しておいてください）。
 		
 		\pause
 		\item
-		識別：並行トレンド（および事前反応なし）の下で、 $\tau_{ATT} = \underbrace{(\mu_{12} - \mu_{11})}_{\text{処置群の変化}} - \underbrace{ (\mu_{02} - \mu_{01}) }_{\text{対照群の変化}}$
+		識別：並行トレンドの下で、 $\tau_{ATT} = (\mu_{12} - \mu_{11}) - (\mu_{02} - \mu_{01})$
 	
 		\pause	
 		\item
@@ -388,7 +388,7 @@
 		\pause
 		\item
 		推定（その2）：OLS でも推定可能です（方法を確認しておいてください！）。
-	\end{wideitemize}
+	\end{wideitemizeshort}
 \end{frame}
 
 \begin{frame}{差の差分析 II}
@@ -466,11 +466,11 @@
 
 \begin{frame}{回帰不連続デザイン (RDD)}
 	\centering
-	\includegraphics[width = 0.6 \linewidth]{../Chapter8/bleemer-rf}
+	\includegraphics[width = 0.5 \linewidth]{../Chapter8/bleemer-rf}
 	
-	\begin{wideitemize}
+	\begin{wideitemizeshort}
 		\item
-		RDD では、処置ステータスを（部分的に）決定するしきい値の直上と直下の人々を比較します。
+		RDD では、しきい値の直上と直下の人々を比較します。
 		
 		\pause
 		\item
@@ -483,11 +483,11 @@
 		\pause
 		\item
 		推定：OLS または局所線形回帰を用いて、カットオフにおける CEF を推定します。
-			\begin{wideitemize}
+			\begin{itemize}
 				\item
 				注意：局所線形回帰の詳細については試験には出しません。
-			\end{wideitemize}
-	\end{wideitemize}
+			\end{itemize}
+	\end{wideitemizeshort}
 \end{frame}
 
 
