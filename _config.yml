@@ -1,7 +1,8 @@
 theme: jekyll-theme-minimal
+
 title: 数理計量経済学講義スライド（日本語版）
-lang: ja
+description: Mathematical Econometrics Lecture Slides
 
 github:
-  is_project_page: false
+  is_project_page: true
   
