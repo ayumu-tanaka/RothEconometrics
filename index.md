@@ -9,7 +9,7 @@ title: 数理計量経済学講義スライド（日本語版）
 * 本レポジトリは、元の英語版スライドに加えて、英語版スライドを日本語に翻訳したものを提供しています。
   * 統計学・計量経済学の用語の日英対照表は[こちら](terms.md)。
 
-
+GitHub Pages: [https://ayumu-tanaka.github.io/RothEconometrics/](https://ayumu-tanaka.github.io/RothEconometrics/)
 
 PDFの配布資料へのリンクは以下の通りです。LaTeXのソースファイルはこのGitHubリポジトリ内で確認できます。
 
