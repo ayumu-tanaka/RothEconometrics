@@ -72,7 +72,7 @@
 | F-test | F検定 |
 | Panel Data | パネルデータ |
 | Difference-in-Differences (DID) | 差の差分析 |
-| Parallel Trends | 並行トレンド |
+| Parallel Trends | 平行トレンド |
 | Event Study | イベントスタディ |
 | Pre-trend | プレトレンド |
 | Clustered Standard Errors | クラスター標準誤差 |
