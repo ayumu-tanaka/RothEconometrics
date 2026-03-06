@@ -298,7 +298,7 @@
 			期間 2 での処置が、期間 1 のアウトカムに影響を与えないという仮定です。
 		\end{itemize}	
 	\item
-	\textbf{並行トレンド仮定} (Parallel trends)：
+	\textbf{平行トレンド仮定} (Parallel trends)：
 	$$ \underbrace{E[  Y_{i2}(0) - Y_{i1}(0) | D_i = 1 ] }_{\text{処置群の $Y(0)$ の変化}} = \underbrace{E[  Y_{i2}(0) - Y_{i1}(0) | D_i = 0 ] }_{\text{対照群の $Y(0)$ の変化}} $$
 	
 	\pause
@@ -316,7 +316,7 @@
 	&= E[Y_{i2}(1) - Y_{i1}(1) | D_i = 1 ] - E[Y_{i2}(0) - Y_{i1}(0) | D_i = 0 ] \text{ \scriptsize (観測データ規則) } \pause{}\\
 	&= E[Y_{i2}(1) - Y_{i1}(0) | D_i = 1 ] - E[Y_{i2}(0) - Y_{i1}(0) | D_i = 0 ] \text{ \scriptsize (事前反応なし) } \pause{} \\
 	&  = E[Y_{i2}(1) - Y_{i2}(0) | D_i = 1] + \\&  E[Y_{i2}(0) - Y_{i1}(0) | D_i = 1 ] - E[Y_{i2}(0) - Y_{i1}(0) | D_i = 0 ]  \text{\scriptsize  (項の加減) } \pause{}\\
-	&= E[Y_{i2}(1) - Y_{i2}(0) | D_i = 1] \text{ \scriptsize(並行トレンド) }
+	&= E[Y_{i2}(1) - Y_{i2}(0) | D_i = 1] \text{ \scriptsize(平行トレンド) }
 	\end{align*}
 
 	\pause
@@ -334,7 +334,7 @@
 \begin{frame}{ATT の推定}
 	\begin{wideitemize}
 		\item
-		DID の仮定（並行トレンドと事前反応なし）の下で、ATT は次のように識別されることを示しました：
+		DID の仮定（平行トレンドと事前反応なし）の下で、ATT は次のように識別されることを示しました：
 		$$ \tau_{ATT} = \underbrace{E[Y_{i2} - Y_{i1} | D_i = 1 ]}_{\text{処置群の母平均の変化}} - \underbrace{E[Y_{i2} - Y_{i1} | D_i = 0 ]}_{\text{対照群の母平均の変化}}  $$
 		
 		\item
@@ -436,7 +436,7 @@ Post ($\hat\beta_1$) & 0.13 \\
 		
 		\begin{enumerate}
 			\item 
-			処置\textit{前}に並行トレンドが成り立っているように見えるかをテストできます。\pause{}
+			処置\textit{前}に平行トレンドが成り立っているように見えるかをテストできます。\pause{}
 			
 			\pause
 			\item
@@ -527,11 +527,11 @@ Post ($\hat\beta_1$) & 0.13 \\
 \end{frame}
 
 
-\begin{frame}{並行トレンドに関する注意点}
+\begin{frame}{平行トレンドに関する注意点}
 	
 	\begin{wideitemize}
 		\item
-		DID は並行トレンド仮定に依存しています。これは選択バイアスを許容しますが、それが時間を通じて一定であることを要求します。 \pause これは、時間とともに変化する交絡因子の存在を排除しています。
+		DID は平行トレンド仮定に依存しています。これは選択バイアスを許容しますが、それが時間を通じて一定であることを要求します。 \pause これは、時間とともに変化する交絡因子の存在を排除しています。
 		
 		\pause
 		\item

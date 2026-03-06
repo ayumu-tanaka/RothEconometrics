@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(lualatex -interaction=nonstopmode Chapter6_v1_JP.tex && lualatex -interaction=nonstopmode Chapter6_v1_JP.tex)",
+      "Bash(lualatex -interaction=nonstopmode -jobname=Chapter6_v1_handout_JP \"\\\\def\\\\ishandout{1}\\\\input{Chapter6_v1_JP.tex}\" && lualatex -interaction=nonstopmode -jobname=Chapter6_v1_handout_JP \"\\\\def\\\\ishandout{1}\\\\input{Chapter6_v1_JP.tex}\")"
+    ]
+  }
+}
