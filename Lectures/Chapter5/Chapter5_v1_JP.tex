@@ -140,7 +140,7 @@
 	%% タイトルスライド
 	\begin{frame}[noframenumbering]{}
 		\vspace{0.5cm}
-		\title[]{第5章：多変量回帰}
+		\title[]{第5章：重回帰}
 		\author{Jonathan Roth}
 		\date{数理計量経済学 I \\ ブラウン大学\\} 
 		\titlepage {\small{}\ }\thispagestyle{empty} \vspace{-30pt}
@@ -150,7 +150,7 @@
 	
 	\begin{frame}{アウトライン}
 
-	1. 多変量回帰と OLS の導出
+	1. 重回帰と OLS の導出
 	\vspace{0.8cm}
 	
 	2. 回帰と因果関係
@@ -224,7 +224,7 @@
 		
 	\end{frame}
 
-\begin{frame}{最小二乗問題としての多変量回帰}
+\begin{frame}{最小二乗問題としての重回帰}
 	\begin{wideitemize}
 		\item
 		単変量 OLS では、以下を解きました：
@@ -267,7 +267,7 @@
 	\end{frame}
 	
 	
-	\begin{frame}{母集団と標本における多変量回帰}
+	\begin{frame}{母集団と標本における重回帰}
 		\begin{wideitemize}
 			\item
 			$\bm{\beta}$ について解くと、母平均を用いた式が得られます：
@@ -324,7 +324,7 @@
 			
 			\pause
 			\item
-			多変量回帰から推定される微分、この場合は $ \bm{\hat\beta}_1  + 2 \bm{\hat\beta}_2 x$ は、しばしば「限界効果（marginal effect）」と呼ばれます。
+			重回帰から推定される微分、この場合は $ \bm{\hat\beta}_1  + 2 \bm{\hat\beta}_2 x$ は、しばしば「限界効果（marginal effect）」と呼ばれます。
 				\smallskip
 
 				\begin{itemize}
@@ -557,7 +557,7 @@
 	\begin{frame}{このアイデアの一般化}
 		\begin{wideitemize}
 			\item
-			\textbf{フリッシュ＝ウォー＝ロヴェル（Frisch-Waugh-Lovell, FWL）定理}は、多変量回帰の係数を解釈する一般的な方法を与えてくれます。 \pause 以下の回帰を考えます：
+			\textbf{フリッシュ＝ウォー＝ロヴェル（Frisch-Waugh-Lovell, FWL）定理}は、重回帰の係数を解釈する一般的な方法を与えてくれます。 \pause 以下の回帰を考えます：
 			$$Y_i = \beta_0 + X_{i1} \beta_1 + X_{i2} \beta_2 + \epsilon_i$$
 			
 			
@@ -621,7 +621,7 @@
 		\begin{wideitemize}
 			\item
 			回帰直線の傾きはまさに $\hat\beta_2 = -0.56$ となります。
-			\item FWL 定理は、多変量回帰係数を可視化・解釈するための容易な方法を提供します。
+			\item FWL 定理は、重回帰係数を可視化・解釈するための容易な方法を提供します。
 		\end{wideitemize}
 	\end{frame}
 	
@@ -789,7 +789,7 @@
 	
 	\begin{frame}{アウトライン}
 
-	\textcolor{red!75!green!50!blue!25!gray}{1. 多変量回帰と OLS の導出}$\checkmark$
+	\textcolor{red!75!green!50!blue!25!gray}{1. 重回帰と OLS の導出}$\checkmark$
 	\vspace{0.8cm}
 	
 	2. 回帰と因果関係
@@ -804,7 +804,7 @@
 \vspace{0.2cm}
 	\begin{wideitemize}
 		\item
-		多変量回帰は、条件付き非交絡性の下で因果的効果を推定するためによく用いられます。
+		重回帰は、条件付き非交絡性の下で因果的効果を推定するためによく用いられます。
 		
 		\pause
 		\item
@@ -825,7 +825,7 @@
 		
 		\pause
 		\item
-		したがって、多変量回帰
+		したがって、重回帰
 		$$Y_i = D_i \beta + \bm{X}_i' \bm{\gamma} + \epsilon_i$$
 		
 		\noindent を推定すれば、 $\bm{\hat\beta}$ を ATE の推定値として解釈できます。
@@ -1631,7 +1631,7 @@ $\hat\beta_{DX}$ & -0.0025 & 0.0005
 
 	\begin{frame}{アウトライン}
 
-	\textcolor{red!75!green!50!blue!25!gray}{1. 多変量回帰と OLS の導出}$\checkmark$
+	\textcolor{red!75!green!50!blue!25!gray}{1. 重回帰と OLS の導出}$\checkmark$
 	\vspace{0.8cm}
 	
 	\textcolor{red!75!green!50!blue!25!gray}{2. 回帰と因果関係}$\checkmark$
