@@ -30,7 +30,7 @@
 | Population Regression | 母集団回帰 |
 | Sample Regression | 標本回帰 |
 | Linear Regression | 線形回帰 |
-| Multivariate Regression | 多変量回帰 |
+| Multivariate Regression | 重回帰 |
 | Ordinary Least Squares (OLS) | 最小二乗法 |
 | Conditional Expectation Function (CEF) | 条件付き期待値関数 |
 | Slope Coefficient | 傾き係数 |
