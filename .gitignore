@@ -6,12 +6,13 @@ CLAUDE.md
 GEMINI.md
 memo.md
 
-## 必須の補助ファイル
+## LaTeXの再生成可能な補助ファイル
 *.aux
 *.log
 *.toc
 *.out
 *.synctex.gz
+*.synctex(busy)
 *.fdb_latexmk
 *.fls
 *.nav
